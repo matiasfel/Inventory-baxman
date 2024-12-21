@@ -1,0 +1,33 @@
+<ion-content [fullscreen]="true">
+
+  <div id="container">
+    <h1>Inicia sesión</h1>
+    
+    <section class="loginForm">
+      <form (submit)="loginForm()">
+        <ion-input 
+          label="Nombre de usuario" 
+          label-placement="floating" 
+          fill="solid"
+          type="text">
+        </ion-input>
+        
+        <ion-input 
+          label="Contraseña" 
+          label-placement="floating" 
+          fill="solid"
+          type="password">
+        </ion-input>
+        
+        <ion-button>Iniciar sesión</ion-button>
+
+      </form>
+    </section>
+    
+  </div>
+
+  <div id="version">
+    <p>Inventory v1.0.0</p>
+  </div>
+
+</ion-content>

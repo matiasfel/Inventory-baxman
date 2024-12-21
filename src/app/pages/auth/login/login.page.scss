@@ -1,0 +1,53 @@
+$background-color : #121212;
+$title-color : #fff;
+$subtitle-color : #8c8c8c;
+
+    // Contenedor principal
+
+    #container {
+        text-align: start;
+    
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    #container h1 {
+        text-align: center;
+        font-size: 34px;
+        font-weight: 700;
+
+        color: $title-color;
+    
+        margin-bottom: 20px;
+    }
+
+    // Formulario de inicio de sesión
+
+    .loginForm {
+        margin: 0 20px;
+    }
+
+    .loginForm ion-input {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .loginForm ion-button {
+        width: 100%;
+    }
+
+    // Marca de la aplicación, version y etc
+
+    #version {
+        text-align: center;
+
+        color: $subtitle-color;
+    
+        position: absolute;
+        left: 65%;
+        right: 0;
+        bottom: 0;
+    }
