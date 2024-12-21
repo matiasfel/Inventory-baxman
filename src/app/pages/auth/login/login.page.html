@@ -1,26 +1,45 @@
 <ion-content [fullscreen]="true">
 
   <div id="container">
-    <h1>Inicia sesión</h1>
     
     <section class="loginForm">
+      <strong>Inicia sesión</strong>
       <form (submit)="loginForm()">
         <ion-input 
           label="Nombre de usuario" 
-          label-placement="floating" 
-          fill="solid"
-          type="text">
+          label-placement="stacked" 
+          color="primary"
+          fill="outline"
+          type="text"
+
+          color="light"
+
+          name="username"
+          [(ngModel)]="username"
+        >
         </ion-input>
         
         <ion-input 
           label="Contraseña" 
           label-placement="floating" 
-          fill="solid"
-          type="password">
+          fill="outline"
+          type="password"
+          
+          color="light"
+
+          name="password"
+          [(ngModel)]="password"
+        >
+          <ion-input-password-toggle slot="end" color="dark"></ion-input-password-toggle>
         </ion-input>
         
-        <ion-button>Iniciar sesión</ion-button>
-
+        <ion-button 
+          type="submit"
+          expand="block"
+          color="light"
+        >
+        Iniciar sesión
+        </ion-button>
       </form>
     </section>
     
