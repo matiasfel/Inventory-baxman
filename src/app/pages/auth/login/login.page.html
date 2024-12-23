@@ -1,21 +1,74 @@
 <ion-content [fullscreen]="true">
 
-  <div id="container">
+  <div id="containerLog">
     
+    <section class="hero">
+      <img src="../../../../assets/hammer-gradient.svg" alt="Logo">
+      <h1> Inventory </h1>
+    </section>
+
     <section class="loginForm">
       <strong>Inicia sesión</strong>
       <form (submit)="loginForm()">
         <ion-input 
-          label="Nombre de usuario" 
+          label="Correo electronico" 
           label-placement="stacked" 
+          color="primary"
+          fill="outline"
+          type="email"
+
+          autocomplete="email"
+
+          color="light"
+
+          name="email"
+          [(ngModel)]="email"
+        >
+        </ion-input>
+        
+        <ion-input 
+          label="Contraseña" 
+          label-placement="floating" 
+          fill="outline"
+          type="password"
+
+          autocomplete="current-password"
+          
+          color="light"
+
+          name="password"
+          [(ngModel)]="password"
+        >
+          <ion-input-password-toggle slot="end" color="dark" mode="ios" label-placement="floating"></ion-input-password-toggle>
+        </ion-input>
+        
+        <ion-button 
+          type="submit"
+          expand="block"
+          color="light"
+          mode="ios"
+        >
+        Iniciar sesión
+        </ion-button>
+
+        <a (click)="toggleContainers()">¿No tienes una cuenta? <br> Regístrate</a>
+      </form>
+    </section>
+
+    <section class="registerForm">
+      <strong>Registrate</strong>
+      <form (submit)="registerForm()">
+        <ion-input 
+          label="Correo electronico" 
+          label-placement="floating" 
           color="primary"
           fill="outline"
           type="text"
 
           color="light"
 
-          name="username"
-          [(ngModel)]="username"
+          name="regEmail"
+          [(ngModel)]="regEmail"
         >
         </ion-input>
         
@@ -27,26 +80,50 @@
           
           color="light"
 
-          name="password"
-          [(ngModel)]="password"
+          (ionInput)="onPasswordInput($event)"
+
+          name="regPassword"
+          [(ngModel)]="regPassword"
         >
-          <ion-input-password-toggle slot="end" color="dark"></ion-input-password-toggle>
+        </ion-input>
+
+        <div>
+          <ion-progress-bar [value]="passwordStrength" [color]="passwordStrengthColor">></ion-progress-bar>
+          <p *ngIf="passwordStrength < 0.5" style="color: red;">La contraseña es débil 😓</p>
+          <p *ngIf="passwordStrength >= 0.5 && passwordStrength < 0.8" style="color: orange;">La contraseña es moderada 😐</p>
+          <p *ngIf="passwordStrength >= 0.8" style="color: green;">La contraseña es fuerte 😊</p>
+        </div>
+
+        <ion-input 
+          label="Confirma tu contraseña" 
+          label-placement="floating" 
+          fill="outline"
+          type="password"
+        
+          color="light"
+
+          name="regConfPassword"
+          [(ngModel)]="regConfPassword"
+        >
         </ion-input>
         
         <ion-button 
           type="submit"
           expand="block"
           color="light"
+          mode="ios"
         >
-        Iniciar sesión
+        Registrarme
         </ion-button>
+
+        <a (click)="toggleContainers()">¿Ya tienes una cuenta? <br> Inicia sesión</a>
       </form>
     </section>
-    
-  </div>
 
-  <div id="version">
-    <p>Inventory v1.0.0</p>
+    <div id="version">
+      <p>Inventory v1.0.0</p>
+    </div>
+    
   </div>
 
 </ion-content>

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 @Component({
   standalone: false,
@@ -8,9 +11,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private storage: Storage,
+    private router: Router,
+    private firebaseService: FirebaseService
+  ) { }
 
   ngOnInit() {
   }
 
+  async logout(){
+    console.log('logout is working');
+    this.firebaseService.logout()
+  }
 }
