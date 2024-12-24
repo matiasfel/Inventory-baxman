@@ -11,8 +11,10 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from 'src/environments/environment';
 
+import { TermsModalComponent } from './components/terms-modal/terms-modal.component';
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, TermsModalComponent],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 

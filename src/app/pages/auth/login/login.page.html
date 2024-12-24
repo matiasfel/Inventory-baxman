@@ -19,6 +19,8 @@
 
           autocomplete="email"
 
+          mode="md"
+
           color="light"
 
           name="email"
@@ -33,6 +35,8 @@
           type="password"
 
           autocomplete="current-password"
+
+          mode="md"
           
           color="light"
 
@@ -45,7 +49,7 @@
         <ion-button 
           type="submit"
           expand="block"
-          color="light"
+          color="dark"
           mode="ios"
         >
         Iniciar sesión
@@ -56,8 +60,9 @@
     </section>
 
     <section class="registerForm">
-      <strong>Registrate</strong>
+
       <form (submit)="registerForm()">
+        <strong>Registrate</strong>
         <ion-input 
           label="Correo electronico" 
           label-placement="floating" 
@@ -65,11 +70,14 @@
           fill="outline"
           type="text"
 
+          mode="md"
+
           color="light"
 
           name="regEmail"
           [(ngModel)]="regEmail"
         >
+          <ion-icon slot="start" name="mail-outline"></ion-icon>
         </ion-input>
         
         <ion-input 
@@ -77,6 +85,8 @@
           label-placement="floating" 
           fill="outline"
           type="password"
+
+          mode="md"
           
           color="light"
 
@@ -85,32 +95,36 @@
           name="regPassword"
           [(ngModel)]="regPassword"
         >
+          <ion-icon slot="start" name="lock-open-outline"></ion-icon>
         </ion-input>
-
-        <div>
-          <ion-progress-bar [value]="passwordStrength" [color]="passwordStrengthColor">></ion-progress-bar>
-          <p *ngIf="passwordStrength < 0.5" style="color: red;">La contraseña es débil 😓</p>
-          <p *ngIf="passwordStrength >= 0.5 && passwordStrength < 0.8" style="color: orange;">La contraseña es moderada 😐</p>
-          <p *ngIf="passwordStrength >= 0.8" style="color: green;">La contraseña es fuerte 😊</p>
-        </div>
 
         <ion-input 
           label="Confirma tu contraseña" 
           label-placement="floating" 
           fill="outline"
           type="password"
+
+          mode="md"
         
           color="light"
 
           name="regConfPassword"
           [(ngModel)]="regConfPassword"
         >
+          <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
         </ion-input>
+
+        <div>
+          <ion-progress-bar [value]="passwordStrength" [color]="passwordStrengthColor">></ion-progress-bar>
+          <p *ngIf="passwordStrength < 0.5" style="color: red;">La contraseña es muy débil</p>
+          <p *ngIf="passwordStrength >= 0.5 && passwordStrength < 0.8" style="color: orange;">La contraseña es moderada</p>
+          <p *ngIf="passwordStrength >= 0.8" style="color: green;">La contraseña es fuerte</p>
+        </div>
         
         <ion-button 
           type="submit"
           expand="block"
-          color="light"
+          color="dark"
           mode="ios"
         >
         Registrarme

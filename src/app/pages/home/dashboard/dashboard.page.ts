@@ -18,10 +18,7 @@ export class DashboardPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.storage.create();
   }
 
-  async logout(){
-    console.log('logout is working');
-    this.firebaseService.logout()
-  }
 }

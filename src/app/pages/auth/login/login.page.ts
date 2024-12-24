@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
+import { TermsModalComponent } from 'src/app/components/terms-modal/terms-modal.component';
 
 @Component({
   standalone: false,
@@ -26,6 +27,7 @@ export class LoginPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private firebaseService: FirebaseService,
+    private modalController: ModalController,
     private storage: Storage,
     private router: Router
   ) {}
@@ -35,10 +37,25 @@ export class LoginPage implements OnInit {
     await this.storage.set('sessionID', false);
   }
 
-  async toastSuccessfull(message: string, duration: number) {
+  async openModalTerms() {
+    const modal = await this.modalController.create({
+      component: TermsModalComponent,
+      componentProps: {},
+    });
+
+    await modal.present();
+
+    // Opcional: Recoge el resultado cuando se cierra el modal
+    const { data } = await modal.onWillDismiss();
+    console.log('Datos del modal:', data);
+  }
+
+  async toastSuccessfull(message: string, duration: number, icon: string) {
     const toast = await this.toastController.create({
       message: message,
       duration: duration,
+      icon: icon,
+      position: 'top'
     });
     toast.present();
   }
@@ -84,7 +101,7 @@ export class LoginPage implements OnInit {
         this.storage.set('sessionID', true);
         this.storage.set('user', user);
         
-        this.toastSuccessfull("Inventory | Inicio de sesión exitoso", 2000);
+        this.toastSuccessfull("Inicio de sesión exitoso", 2000, 'checkmark-outline');
         this.router.navigate(['/dashboard']);
 
       } catch (error) {
@@ -98,7 +115,7 @@ export class LoginPage implements OnInit {
     console.log('registerForm is working');
 
     if (this.regEmail === '' || this.regPassword === "" || this.regConfPassword === '') {
-      this.alertError("Registro", "Debes completar todos los campos");
+      this.alertError("Registro", "Debes completar todos los campos.");
       return; 
     }
 
@@ -111,8 +128,8 @@ export class LoginPage implements OnInit {
 
     const passwordPattern = /^(?=.*\d)(?=.*[A-Z])(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
 
-    if (!passwordPattern.test(this.regPassword)) {
-      this.alertError("Registro", 'La contraseña debe tener al menos 8 caracteres, una mayuscula, un número y un caracter especial.');
+    if (!passwordPattern.test(this.regPassword) || /\s/.test(this.regPassword)) {
+      this.alertError("Registro", 'La contraseña debe tener al menos 8 caracteres, una mayúscula, un número, un carácter especial y no debe contener espacios.');
       return;
     }
 
@@ -121,12 +138,25 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    this.firebaseService.register(this.regEmail, this.regPassword).then(async (userCredential) => {
-      this.toastSuccessfull("Inventory | Registro exitoso, ahora debes iniciar sesión", 2000);
-      this.toggleContainers();
-    }).catch((error) => {
-      this.alertError("Registro", "EL correo electrónico ya está en uso.");
+    const modal = await this.modalController.create({
+      component: TermsModalComponent,
+      componentProps: {},
     });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data && data.accepted) {
+      this.firebaseService.register(this.regEmail, this.regPassword).then(async (userCredential) => {
+      this.toastSuccessfull("Registro exitoso, ahora debes iniciar sesión", 2000, 'checkmark-outline');
+      this.toggleContainers();
+      }).catch((error) => {
+      this.alertError("Registro", "El correo electrónico ya está en uso.");
+      });
+    } else {
+      this.alertError("Registro", "Debes aceptar los términos y condiciones para registrarte.");
+    }
 
   }
 
@@ -166,6 +196,7 @@ export class LoginPage implements OnInit {
   }
 
   async toggleContainers() {
+
     const loginForm = document.getElementsByClassName('loginForm')[0] as HTMLElement;
     const registerForm = document.getElementsByClassName('registerForm')[0] as HTMLElement;
 
@@ -178,11 +209,11 @@ export class LoginPage implements OnInit {
         registerForm.style.zIndex = '2';
 
         loginForm.style.transform = 'translateY(100%)';
-        registerForm.style.display = 'block';
-        
+        registerForm.style.display = 'flex';
+
         setTimeout(() => {
-          registerForm.style.transform = 'translateY(0)';
           loginForm.style.display = 'none';
+          registerForm.style.transform = 'translateY(0%)';
         }, 250);
 
       } else {
@@ -197,8 +228,8 @@ export class LoginPage implements OnInit {
         loginForm.style.display = 'block';
 
         setTimeout(() => {
-          loginForm.style.transform = 'translateY(0)';
           registerForm.style.display = 'none';
+          loginForm.style.transform = 'translateY(0%)';
         }, 250);
       }
     }

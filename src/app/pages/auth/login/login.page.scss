@@ -14,6 +14,10 @@ $light-color      :  #f6f8fc;
 
     // Content
 
+    * {
+        user-select: none;
+    }
+
     ion-content {
         --background: $background-color;
         overflow: hidden;
@@ -55,6 +59,8 @@ $light-color      :  #f6f8fc;
         width: 100px;
         height: 100px;
         margin-bottom: 30px;
+
+        filter: drop-shadow(0 0 10px rgba(129, 255, 236, 0.895));
     }
 
     .hero h1 {
@@ -67,6 +73,8 @@ $light-color      :  #f6f8fc;
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+
+        text-shadow: 0 0 10px rgba(129, 255, 236, 0.895);
     }
 
     // Formulario de inicio de sesión
@@ -124,10 +132,9 @@ $light-color      :  #f6f8fc;
     .registerForm {
         background-color: #ffffff;
         border-radius: 2rem 2rem 0 0;
-        padding: 20px;
 
         width: 100%;
-        height: 75vh;
+        height: 100%;
 
         position: absolute;
         left: 0;
@@ -136,9 +143,18 @@ $light-color      :  #f6f8fc;
         z-index: 1;
 
         transform: translateY(100%);
+
         display: none;
+        justify-content: center;
+        align-items: center;
 
         transition: all 0.25s ease;
+    }
+
+    .registerForm form {
+        padding: 20px;
+        width: 100%;
+        max-width: 400px;
     }
 
     .registerForm strong {
@@ -179,6 +195,7 @@ $light-color      :  #f6f8fc;
     // Marca de la aplicación, version y etc
 
     #version {
+        font-family: monospace;
         text-align: center;
         color: $subtitle-color;
 
