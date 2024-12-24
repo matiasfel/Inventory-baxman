@@ -72,43 +72,45 @@ export class LoginPage implements OnInit {
 
   async loginForm() {
     console.log('loginForm is working');
-
+  
     if (this.email === '' || this.password === '') {
       this.alertError("Inicio de sesión", "Debes completar todos los campos");
       return; 
     }
-
+  
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+  
     if (!emailPattern.test(this.email)) {
       this.alertError("Inicio de sesión", "Por favor ingresa un correo electrónico válido.");
       return;
     }
-
-    this.firebaseService.login(this.email, this.password).then(async (userCredential) => {
-      if (!userCredential.user) {
-        this.alertError("Inicio de sesión", "No se ha encontrado un usuario con esas credenciales.");
+  
+    this.firebaseService.login(this.email, this.password).then(async (res) => {
+      if (!res.user) {
+        this.alertError("Inicio de sesión", "Error al obtener el usuario, pide ayuda.");
         return;
       }
-
+  
       try {
         const user = {
-          uid: userCredential.user.uid,
-          email: userCredential.user.email,
+          uid: res.user.uid,
+          email: res.user.email,
           displayName: this.email.split('@')[0],
         };
-
-        this.storage.set('sessionID', true);
+  
         this.storage.set('user', user);
+        this.storage.set('sessionID', true);
         
         this.toastSuccessfull("Inicio de sesión exitoso", 2000, 'checkmark-outline');
         this.router.navigate(['/dashboard']);
-
+  
       } catch (error) {
         this.alertError("Inicio de sesión", "Ha ocurrido un error al intentar iniciar sesión, pide ayuda.");
       }
+    }).catch((error) => {
+      this.alertError("Inicio de sesión", "Credenciales incorrectas o error en el servidor.");
+      console.error("Error al iniciar sesión:", error);
     });
-
   }
 
   async registerForm() {
