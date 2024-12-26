@@ -50,12 +50,12 @@ export class LoginPage implements OnInit {
     console.log('Datos del modal:', data);
   }
 
-  async toastSuccessfull(message: string, duration: number, icon: string) {
+  async toastSuccessfull(message: string, duration: number, icon: string, cssClass: string = '') {
     const toast = await this.toastController.create({
       message: message,
       duration: duration,
       icon: icon,
-      position: 'top'
+      position: 'bottom',
     });
     toast.present();
   }
@@ -101,14 +101,14 @@ export class LoginPage implements OnInit {
         this.storage.set('user', user);
         this.storage.set('sessionID', true);
         
-        this.toastSuccessfull("Inicio de sesión exitoso", 2000, 'checkmark-outline');
+        this.toastSuccessfull("Inicio de sesión exitoso", 2000, 'log-in');
         this.router.navigate(['/dashboard']);
   
       } catch (error) {
         this.alertError("Inicio de sesión", "Ha ocurrido un error al intentar iniciar sesión, pide ayuda.");
       }
     }).catch((error) => {
-      this.alertError("Inicio de sesión", "Credenciales incorrectas o error en el servidor.");
+      this.alertError("Inicio de sesión", "Usuario o contraseña incorrectos.");
       console.error("Error al iniciar sesión:", error);
     });
   }

@@ -1,17 +1,35 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
+import { RouterModule, Routes } from '@angular/router';
 import { DashboardPage } from './dashboard.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardPage
+    component: DashboardPage,
+    children: [
+      {
+        path: 'inventory',
+        loadChildren: () => import('../inventory/inventory.module').then(m => m.InventoryPageModule)
+      },
+      {
+        path: 'furnitures',
+        loadChildren: () => import('../furnitures/furnitures.module').then(m => m.FurnituresPageModule)
+      },
+      {
+        path: 'settings',
+        loadChildren: () => import('../settings/settings.module').then(m => m.SettingsPageModule)
+      },
+      {
+        path: '',
+        redirectTo: 'inventory',
+        pathMatch: 'full'
+      }
+    ]
   }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class DashboardPageRoutingModule {}
+export class DashboardPageRoutingModule { }

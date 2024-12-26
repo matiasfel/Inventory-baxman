@@ -1,0 +1,121 @@
+<ion-content [fullscreen]="true">
+
+  <section class="top">
+
+    <ion-avatar>
+      <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+    </ion-avatar>
+
+    <div>
+      <p> {{ displayName }} </p>
+      <p> {{ email }} </p>
+    </div>
+
+    <button>
+      Editar perfil
+      <ion-icon name="create-outline"></ion-icon>
+    </button>
+
+  </section>
+
+  <section class="optionsSection">
+
+    <div class="options">
+      <p> Cuenta </p>
+
+      <div class="buttons">
+
+        <button (click)="copyUID()">
+          <div>
+            <ion-icon name="person-outline" id="insideIcon"></ion-icon>
+            <span> Usuario </span>
+            <span id="uid"> {{ uid }} </span>
+          </div>
+          <ion-icon name="copy" id="outIcon"></ion-icon>
+        </button>
+
+        <hr>
+
+        <button (click)="changeEmail()">
+          <div>
+            <ion-icon name="lock-closed-outline" id="insideIcon"></ion-icon>
+            <span> Cambiar correo electronico </span>
+          </div>
+          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
+        </button>
+
+        <hr>
+        
+        <button (click)="changePassword()">
+          <div>
+            <ion-icon name="mail-outline" id="insideIcon"></ion-icon>
+            <span> Cambiar contraseña </span>
+          </div>
+          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
+        </button>
+
+        <hr>
+
+        <button (click)="supportRequests()">
+          <div>
+            <ion-icon name="help-buoy-outline" id="insideIcon"></ion-icon>
+            <span> Soporte </span>
+          </div>
+          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
+        </button>
+        
+        <hr>
+
+        <button (click)="deleteAccount()">
+          <div>
+            <ion-icon name="trash-outline" id="insideIcon" color="danger" style="background-color: #ffeded;"></ion-icon>
+            <span style="color: #c6000e;"> Eliminar cuenta </span>
+          </div>
+          <ion-icon name="arrow-forward-outline" id="outIcon" color="danger"></ion-icon>
+        </button>
+
+        <hr>
+
+        <button (click)="logout()">
+          <div>
+            <ion-icon name="log-out-outline" id="insideIcon" color="danger" style="background-color: #ffeded;"></ion-icon>
+            <span style="color: #c6000e;"> Cerrar sesión </span>
+          </div>
+          <ion-icon name="arrow-forward-outline" id="outIcon" color="danger"></ion-icon>
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="options">
+      <p> Preferencias </p>
+
+      <div class="buttons">
+
+        <button>
+          <div>
+            <ion-icon name="notifications-outline" id="insideIcon"></ion-icon>
+            <span> Notificaciones push </span>
+          </div>
+          <ion-toggle mode="ios" id="outIcon"></ion-toggle>
+        </button>
+
+        <hr>
+
+        <button>
+          <div>
+            <ion-icon name="volume-high-outline" id="insideIcon"></ion-icon>
+            <span> Notificaciones con sonido </span>
+          </div>
+          <ion-toggle mode="ios" id="outIcon"></ion-toggle>
+        </button>
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+</ion-content>
