@@ -1,0 +1,190 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.search {
+    width: 100%;
+    height: 100px;
+    padding: 10px 20px 0;
+    position: fixed;
+    background-color: #f4f4f4;
+    z-index: 9999;
+}
+
+.search h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.search ion-searchbar {
+    width: 100%;
+    max-width: 365px;
+    margin: 0 auto;
+}
+
+#separator {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin-top: 100px;
+}
+
+#filteredFurnitures {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #b1b1b1;   
+    width: 80%;
+    max-width: 365px;
+}
+
+#nonFurnitures {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #b1b1b1;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px; /* Reduced gap between cards */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 790px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cards .card {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 365px;
+}
+.cards .card img {
+    width: 100%;
+    height: 275px;
+    object-fit: cover;
+}
+
+.cards .card h1 {
+    font-size: 1.5rem;
+    margin: 20px;
+}
+
+.cards .card #description {
+    font-size: 1rem;
+    margin: 0 20px 20px 20px;
+
+    overflow: hidden;
+}
+
+.cards .card div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    gap: 10px;
+}
+
+.cards .card button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    color: #fff;
+}
+
+.cards .card button:nth-child(1) {
+    background-color: #4CAF50;
+}
+
+.cards .card button:nth-child(2) {
+    background-color: #ff4d4d;
+}
+
+.cards .card button:nth-child(3) {
+    background-color: #2196F3;
+}
+
+.cards .card button:active {
+    transform: scale(0.9);
+}
+
+.cards .card ion-card {
+    width: 100%;
+    min-width: auto;
+    height: 500px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+// separator 2
+
+#separator2 {
+    width: 100%;
+    margin-top: 70px;
+}
+
+// add furniture style
+
+.fabButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.addFurniture {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+}
+
+.addFurniture .info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.addFurniture .info h1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+
+    font-size: 1.2rem;
+    font-weight: 400;
+    
+    span {
+        font-size: 0.9rem;
+        color: #ff4d4d;
+    }
+}
+
+.addFurniture .info ion-input {
+    margin-bottom: 10px;
+    --highlight-color-focused: #8da9c6;
+    --highlight-color-valid: #8da9c6;
+}
+
+.addFurniture .info ion-textarea {
+    --highlight-color-focused: #8da9c6;
+    --highlight-color-valid: #8da9c6;
+}

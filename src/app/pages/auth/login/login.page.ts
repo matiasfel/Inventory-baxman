@@ -50,12 +50,14 @@ export class LoginPage implements OnInit {
     console.log('Datos del modal:', data);
   }
 
-  async toastSuccessfull(message: string, duration: number, icon: string, cssClass: string = '') {
+  async toastSuccessfull(message: string, duration: number, icon: string, positionAnchor: string) {
     const toast = await this.toastController.create({
       message: message,
       duration: duration,
       icon: icon,
-      position: 'bottom',
+      positionAnchor: positionAnchor,
+      color: 'dark',
+      mode: 'ios',
     });
     toast.present();
   }
@@ -64,6 +66,7 @@ export class LoginPage implements OnInit {
     const alert = await this.alertController.create({
       header: header,
       message: message,
+      mode: 'ios',
       buttons: ['OK'],
     });
   
@@ -95,13 +98,13 @@ export class LoginPage implements OnInit {
         const user = {
           uid: res.user.uid,
           email: res.user.email,
-          displayName: this.email.split('@')[0],
+          displayName: res.user.displayName,
         };
   
         this.storage.set('user', user);
         this.storage.set('sessionID', true);
         
-        this.toastSuccessfull("Inicio de sesión exitoso", 2000, 'log-in');
+        this.toastSuccessfull("Inicio de sesión exitoso", 2000, 'log-in', 'version');
         this.router.navigate(['/dashboard']);
   
       } catch (error) {
@@ -150,8 +153,8 @@ export class LoginPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.accepted) {
-      this.firebaseService.register(this.regEmail, this.regPassword).then(async (userCredential) => {
-      this.toastSuccessfull("Registro exitoso, ahora debes iniciar sesión", 2000, 'checkmark-outline');
+      this.firebaseService.register(this.regEmail, this.regPassword).then(async (r) => {
+      this.toastSuccessfull("Registro exitoso, ahora debes iniciar sesión", 2000, 'person-add-outline', 'bottom');
       this.toggleContainers();
       }).catch((error) => {
       this.alertError("Registro", "El correo electrónico ya está en uso.");

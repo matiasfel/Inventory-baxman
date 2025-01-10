@@ -37,10 +37,14 @@ export class FirebaseService {
       });
 
       const uid = user.uid;
+
+      const createTime = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' });
+
       await this.fireStore.doc(`users/${uid}`).set({
         uid: uid,
         email: email,
         displayName: email.split('@')[0],
+        createTime: createTime,
       });
     }
   
@@ -58,7 +62,17 @@ export class FirebaseService {
     }
   }
 
-  // Método para cambiar el correo electrónico
+  // Método para cambiar el nombre
+  async updateName(newName: string) {
+    const user = await this.fireAuth.currentUser;
+    if (user) {
+      return user.updateProfile({
+        displayName: newName
+      });
+    }
+  }
+
+  // Método para cambiar el email
   async updateEmail(newEmail: string) {
     const user = await this.fireAuth.currentUser;
     if (user) {
@@ -83,38 +97,6 @@ export class FirebaseService {
       await this.fireStore.doc(`users/${uid}`).delete();
 
       await user.delete();
-    }
-  }
-
-  async supportRequest(message: string) {
-    try {
-      const user = await this.fireAuth.currentUser;
-
-      if (user) {
-        const uid = user.uid;
-        const email = user.email;
-        const displayName = user.displayName;
-
-        const reportTime = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' });
-        const reportDate = new Date();
-
-        const supportRequest = {
-          uid: uid,
-          email: email,
-          displayName: displayName,
-          reportTime: reportTime,
-          reportDate: reportDate,
-          message: message,
-        };
-
-        await this.fireStore.collection('supportRequests').doc(uid).set(supportRequest);
-        return 'Support request sent successfully';
-      } else {
-        throw new Error('User not authenticated');
-      }
-    } catch (error) {
-      console.error('Error sending support request:', error);
-      throw error;
     }
   }
 

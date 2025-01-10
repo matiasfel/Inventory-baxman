@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicModule, IonicRouteStrategy, AnimationController } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 
 import { AppComponent } from './app.component';
@@ -12,9 +12,10 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from 'src/environments/environment';
 
 import { TermsModalComponent } from './components/terms-modal/terms-modal.component';
+import { FurnitureDetailComponent } from './components/app-furniture-detail/app-furniture-detail.component';
 
 @NgModule({
-  declarations: [AppComponent, TermsModalComponent],
+  declarations: [AppComponent, TermsModalComponent, FurnitureDetailComponent],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 
@@ -22,9 +23,9 @@ import { TermsModalComponent } from './components/terms-modal/terms-modal.compon
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
-    AngularFireModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AnimationController],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

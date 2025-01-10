@@ -85,7 +85,7 @@ styles: [`
 
   .content-wrapper {
     text-align: left;
-    padding: 16px;
+    padding: 10px;
   }
 
   h3 {

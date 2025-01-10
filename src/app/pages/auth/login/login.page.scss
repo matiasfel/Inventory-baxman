@@ -60,7 +60,7 @@ $light-color      :  #f6f8fc;
         height: 100px;
         margin-bottom: 30px;
 
-        filter: drop-shadow(0 0 10px rgba(129, 255, 236, 0.895));
+        filter: drop-shadow(0 0 50px rgba(129, 255, 236, 0.895));
     }
 
     .hero h1 {
@@ -68,13 +68,9 @@ $light-color      :  #f6f8fc;
         font-weight: 400;
         letter-spacing: 4px;
         margin-bottom: 50px;
+        color: #b2d7fd;
 
-        background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-
-        text-shadow: 0 0 10px rgba(129, 255, 236, 0.895);
+        text-shadow: 0 0 50px rgba(129, 255, 236, 0.895);
     }
 
     // Formulario de inicio de sesión
@@ -110,13 +106,15 @@ $light-color      :  #f6f8fc;
         max-width: 400px;
         margin-bottom: 30px;
 
-        --highlight-color-valid: #4a87f1;
+        --highlight-color-focused: #8da9c6;
+        --highlight-color-valid: #8da9c6;
     }
 
-    .loginForm a {
+    .loginForm #haveAccount {
         display: block;
         margin-top: 30px;
         color: $primary-color;
+        cursor: pointer;
     }
 
     .loginForm ion-button {
@@ -169,13 +167,15 @@ $light-color      :  #f6f8fc;
         max-width: 400px;
         margin-bottom: 30px;
 
-        --highlight-color-valid: #4a87f1;
+        --highlight-color-focused: #8da9c6;
+        --highlight-color-valid: #8da9c6;
     }
 
-    .registerForm a {
+    .registerForm #haveAccount {
         display: block;
         margin-top: 30px;
         color: $primary-color;
+        cursor: pointer;
     }
 
     .registerForm div {
@@ -193,7 +193,6 @@ $light-color      :  #f6f8fc;
     // Marca de la aplicación, version y etc
 
     #version {
-        font-family: monospace;
         text-align: center;
         color: $subtitle-color;
 

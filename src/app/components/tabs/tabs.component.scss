@@ -1,15 +1,13 @@
 ion-tabs {
     margin: 0 auto;
-    max-width: 400px
-}
-
-ion-tab-bar {
-    --background: #fff; 
-    --border: #646464;
-    --color: #646464; 
 }
 
 ion-tab-button {
-    transition: 0.5s;
-    --color-selected: rgb(0, 0, 0);
+    width: 100%;
+    max-width: 150px;
+    transition: scale 0.3s ease;
+}
+
+ion-tab-button:active {
+    scale: 0.9;
 }

@@ -1,5 +1,180 @@
 <ion-content [fullscreen]="true">
 
-  <h1>Pestaña de muebles</h1>
+  <div class="search">
+    <h1>Muebles</h1>
+    <ion-searchbar 
+      mode="ios"
+      placeholder="Buscar"
+      [(ngModel)]="searchQuery"
+      (ionInput)="filterFurnitures()"
+      maxlength="50">
+    </ion-searchbar>
+  </div>
+
+  <div id="separator">
+  </div>
+
+  <div id="filteredFurnitures" *ngIf="filteredFurnitures.length === 0 && searchQuery">
+    <p>No se han encontrado muebles con el nombre de: "{{ searchQuery }}"</p>
+  </div>
+
+  <div id="nonFurnitures" *ngIf="furnitures.length === 0 && !searchQuery">
+    <p>No tienes ningun mueble agregado.</p>
+  </div>
+
+  <section class="cards">
+    <div class="card" *ngFor="let furniture of filteredFurnitures">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+            <ion-card mode="ios">
+              <img [src]="furniture.frontImg" alt="">
+              <ion-card-header>
+                <ion-card-title>
+                  <h1>{{ furniture.name }}</h1>
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p id="description">{{ furniture.description }}</p>
+                <div class="buttons">
+                  <button (click)="editFurniture()">
+                    <p>Editar</p>
+                    <ion-icon name="create"></ion-icon>
+                  </button>
+                  <button (click)="deleteFurniture()">
+                    <p>Eliminar</p>
+                    <ion-icon name="trash"></ion-icon>
+                  </button>
+                  <button (click)="viewFurniture(furniture)">
+                    <p>Visualizar</p>
+                    <ion-icon name="eye"></ion-icon>
+                  </button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <div id="separator2">
+    </div>
+  
+  </section>
+
+  <section class="fabButton">
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button id="addFurniture">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </section>
+
+  <ion-modal trigger="addFurniture" mode="ios">
+    <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Agregar mueble</ion-title>
+        <ion-buttons slot="start">
+          <ion-button (click)="dismissModal()">Cancelar</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button (click)="addFurniture()">Agregar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+
+      <div class="addFurniture">
+        
+        <div class="info">
+
+          <h1 style="opacity: 0.5;">Fotografía referencia <span>(obligatorio)</span></h1>
+          <ion-input 
+          fill="outline"
+          mode="md"
+          color="dark"
+          type="text"
+          name="frontImg"
+          [(ngModel)]="frontImg"
+          disabled
+          >
+          </ion-input>
+
+          <h1>Nombre <span>(obligatorio)</span> </h1>
+          <ion-input 
+          fill="outline"
+          mode="md"
+          color="dark"
+          type="text"
+          name="name"
+          [(ngModel)]="name"
+          maxlength="50"
+          [counter]="true"
+          >
+          </ion-input>
+
+          <h1>Descripción <span>(obligatorio)</span> </h1>
+          <ion-textarea
+          fill="outline"
+          mode="md"
+          color="dark"
+          [autoGrow]="true"
+          [(ngModel)]="description"
+          maxlength="200"
+          [counter]="true"
+          >
+          </ion-textarea>
+
+          <h1>Costos <span>(opcional)</span> </h1>
+          <ion-list>
+            <ion-item *ngFor="let cost of costs; let i = index">
+              <ion-input 
+                placeholder="Nombre del costo"
+                [(ngModel)]="cost.name"
+                fill="outline"
+                mode="md"
+                color="dark"
+                type="text">
+              </ion-input>
+              <ion-input 
+                placeholder="Valor del costo"
+                [(ngModel)]="cost.value"
+                fill="outline"
+                mode="md"
+                color="dark"
+                type="number">
+              </ion-input>
+              <ion-button color="danger" (click)="removeCost(i)">
+                <ion-icon name="remove-circle"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-button (click)="addCost()">
+              <ion-icon name="add-circle"></ion-icon>
+              Agregar Costo
+            </ion-button>
+          </ion-list>
+
+        </div>
+
+      </div>
+    </ion-content>
+    </ng-template>
+  </ion-modal>
 
 </ion-content>
+
+
+<!-- <h2>Costos</h2>
+<ion-list>
+  <ion-item *ngFor="let cost of furniture.costs">
+    <ion-label>{{ cost.name }}: {{ cost.value | currency }}</ion-label>
+  </ion-item>
+</ion-list>
+
+<h2>Cortes</h2>
+<ion-list>
+  <ion-item *ngFor="let cut of furniture.cuts">
+    <ion-label>{{ cut.name }}</ion-label>
+  </ion-item>
+</ion-list> -->
