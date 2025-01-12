@@ -1,5 +1,9 @@
 <ion-content [fullscreen]="true">
 
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" mode="ios">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="search">
     <h1>Muebles</h1>
     <ion-searchbar 
@@ -23,6 +27,7 @@
   </div>
 
   <section class="cards">
+
     <div class="card" *ngFor="let furniture of filteredFurnitures">
       <ion-grid>
         <ion-row>
@@ -86,95 +91,47 @@
     <ion-content>
 
       <div class="addFurniture">
-        
-        <div class="info">
 
-          <h1 style="opacity: 0.5;">Fotografía referencia <span>(obligatorio)</span></h1>
-          <ion-input 
-          fill="outline"
-          mode="md"
-          color="dark"
-          type="text"
-          name="frontImg"
-          [(ngModel)]="frontImg"
-          disabled
-          >
-          </ion-input>
+        <section class="basicDetails">
+          <h1>Detalles basicos</h1>
 
-          <h1>Nombre <span>(obligatorio)</span> </h1>
-          <ion-input 
-          fill="outline"
-          mode="md"
-          color="dark"
-          type="text"
-          name="name"
-          [(ngModel)]="name"
-          maxlength="50"
-          [counter]="true"
-          >
-          </ion-input>
+          <div>
+            <ion-input 
+              mode="md"
+              label="Nombre"
+              label-placement="stacked" 
+              fill="outline" 
+              placeholder="¡Escoje un nombre interesante!"
+              (ionInput)="validateInput($event, 'input')">
+            </ion-input>
 
-          <h1>Descripción <span>(obligatorio)</span> </h1>
-          <ion-textarea
-          fill="outline"
-          mode="md"
-          color="dark"
-          [autoGrow]="true"
-          [(ngModel)]="description"
-          maxlength="200"
-          [counter]="true"
-          >
-          </ion-textarea>
+            <ion-textarea 
+              mode="md"
+              label="Descripción"
+              label-placement="stacked" 
+              fill="outline"
+              [autoGrow]="true"
+              placeholder="¡Escoje una descripción interesante!"
+              [counter]="true"
+              maxlength="150"
+              (ionInput)="validateInput($event, 'textarea')">
+            </ion-textarea>
+          </div>
 
-          <h1>Costos <span>(opcional)</span> </h1>
-          <ion-list>
-            <ion-item *ngFor="let cost of costs; let i = index">
-              <ion-input 
-                placeholder="Nombre del costo"
-                [(ngModel)]="cost.name"
-                fill="outline"
-                mode="md"
-                color="dark"
-                type="text">
-              </ion-input>
-              <ion-input 
-                placeholder="Valor del costo"
-                [(ngModel)]="cost.value"
-                fill="outline"
-                mode="md"
-                color="dark"
-                type="number">
-              </ion-input>
-              <ion-button color="danger" (click)="removeCost(i)">
-                <ion-icon name="remove-circle"></ion-icon>
-              </ion-button>
-            </ion-item>
-            <ion-button (click)="addCost()">
-              <ion-icon name="add-circle"></ion-icon>
-              Agregar Costo
-            </ion-button>
-          </ion-list>
+        </section>
 
-        </div>
+        <section class="photo">
+          <h1>Fotografía</h1>
+        </section>
+
+        <section class="avancedDetails">
+          <h1>Detalles avanzados</h1>
+        </section>
 
       </div>
+
     </ion-content>
     </ng-template>
   </ion-modal>
 
 </ion-content>
-
-
-<!-- <h2>Costos</h2>
-<ion-list>
-  <ion-item *ngFor="let cost of furniture.costs">
-    <ion-label>{{ cost.name }}: {{ cost.value | currency }}</ion-label>
-  </ion-item>
-</ion-list>
-
-<h2>Cortes</h2>
-<ion-list>
-  <ion-item *ngFor="let cut of furniture.cuts">
-    <ion-label>{{ cut.name }}</ion-label>
-  </ion-item>
-</ion-list> -->

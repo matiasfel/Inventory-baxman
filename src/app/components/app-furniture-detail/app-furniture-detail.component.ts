@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 @Component({
@@ -22,14 +21,6 @@ import jsPDF from 'jspdf';
     </ion-header>
     <ion-content>
       <section class="viewFurniture">
-
-        <div class="container">
-          <div class="title">
-            <h2>Imagen del mueble</h2>
-            <ion-icon name="image"></ion-icon>
-          </div>
-          <img [src]="furniture.frontImg" alt="">
-        </div>
 
         <div class="container">
           <div class="name">
@@ -54,44 +45,107 @@ import jsPDF from 'jspdf';
           </div>
         </div>
 
-        <div class="avancedDetails">
-          <ion-accordion-group expand="inset">
-            <ion-accordion value="first">
-              <ion-item slot="header" color="light">
+        <div class="container">
+          <div class="title">
+            <h2>Imagen del mueble</h2>
+            <ion-icon name="image"></ion-icon>
+          </div>
+          <img [src]="furniture.frontImg">
+        </div>
+
+        <div class="container">
+          <div class="title">
+            <h2>Detalles avanzados</h2>
+            <ion-icon name="document-lock"></ion-icon>
+          </div>
+
+          <ion-accordion-group expand="inset" [multiple]="true">
+
+          <ion-accordion value="first">
+              <ion-item slot="header">
                 <h2>Costos</h2>
               </ion-item>
               <div class="ion-padding" slot="content">
                 <ion-item *ngFor="let cost of furniture.costs">
                   <ion-label>{{ cost.name }}: {{ cost.value | currency }}</ion-label>
+                  <button class="copy" (click)="copy($event)"> Copiar </button>
                 </ion-item>
               </div>
             </ion-accordion>
+
             <ion-accordion value="second">
-              <ion-item slot="header" color="light">
+              <ion-item slot="header">
                 <h2>Cortes</h2>
               </ion-item>
               <div class="ion-padding" slot="content">
                 <ion-item *ngFor="let cut of furniture.cuts">
-                  <ion-label>{{ cut.name }}</ion-label>
+                  <ion-label>{{cut.extent}} = {{ cut.name }}</ion-label>
+                  <button class="copy" (click)="copy($event)"> Copiar </button>
                 </ion-item>
               </div>
             </ion-accordion>
+
             <ion-accordion value="third">
-              <ion-item slot="header" color="light">
+              <ion-item slot="header">
                 <h2>Accesorios</h2>
               </ion-item>
               <div class="ion-padding" slot="content">
                 <ion-item *ngFor="let accessory of furniture.accessories">
-                <ion-label>{{ accessory.name }}: {{ accessory.quantity }}</ion-label>
+                  <ion-label>{{ accessory.name }}: {{ accessory.quantity }}</ion-label>
+                  <button class="copy" (click)="copy($event)"> Copiar </button>
                 </ion-item>
               </div>
             </ion-accordion>
           </ion-accordion-group>
         </div>
+
+        <div class="separator">
+          ---
+        </div>
       </section>
     </ion-content>
   `,
   styles: [`
+
+  .copy {
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: black;
+    transition: transform 0.3s ease;
+  }
+
+  .copy:active {
+    transform: scale(0.9);
+  }
+
+  ion-accordion-group {
+    margin: 0;
+    padding: 0;
+    border-radius: 16px;
+  }
+
+  ion-accordion {
+    border-radius: 16px;
+  }
+
+  ion-accordion.accordion-expanding,
+  ion-accordion.accordion-expanded {
+    margin: 16px auto;
+  }
+  
+  ion-accordion.accordion-collapsing ion-item[slot='header'],
+  ion-accordion.accordion-collapsed ion-item[slot='header'] {
+    --background: #f4f4f4;
+    --color: var(--ion-color-light-contrast);
+  }
+
+  ion-accordion.accordion-expanding ion-item[slot='header'],
+  ion-accordion.accordion-expanded ion-item[slot='header'] {
+    --background: #d8dade;
+    --color: var(--ion-color-light-contrast);
+  }
 
   .viewFurniture {
     display: flex;
@@ -117,7 +171,7 @@ import jsPDF from 'jspdf';
 
     h2 {
       margin: 0;
-      font-weight: 1000;
+      font-weight: 600;
       font-size: 1.5rem;
     }
 
@@ -132,17 +186,11 @@ import jsPDF from 'jspdf';
     align-items: center;
     margin: 0 0 0.5rem;
     gap: 10px;
-
-    h3 {
-      margin: 0;
-      font-weight: 1000;
-      font-size: 1.5rem;      
-    }
   }
 
   .viewFurniture .container .name p {
     font-size: 1.2rem;
-    margin: 0 0 1.2rem;
+    margin: 0 0 1.5rem;
   }
 
   .viewFurniture .container .desc .title {
@@ -151,12 +199,6 @@ import jsPDF from 'jspdf';
     align-items: center;
     margin: 0 0 0.5rem;
     gap: 10px;
-
-    h3 {
-      margin: 0;
-      font-weight: 1000;
-      font-size: 1.5rem;      
-    }
   }
 
   .viewFurniture .container .desc p {
@@ -171,16 +213,16 @@ import jsPDF from 'jspdf';
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
   }
 
-  .viewFurniture .avancedDetails {
+  .separator {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-bottom: 1rem;
+    background: transparent;
+    text-align: center;
+    color: transparent;
   }
 
           `]
 })
+
 export class FurnitureDetailComponent {
   @Input() furniture: any;
 
@@ -204,8 +246,8 @@ export class FurnitureDetailComponent {
 
   async export() {
     const alert = await this.alertController.create({
-      header: 'Exportar como imagen',
-      message: '¿Qué tipo de exportación deseas realizar?',
+      header: 'Exportar detalles',
+      message: '¿Qué tipo de detalles deseas obtener?',
       mode: 'ios',
       buttons: [
         {
@@ -342,13 +384,12 @@ export class FurnitureDetailComponent {
       doc.text(`${cost.name}: ${cost.value}`, marginLeft + 10, cursorY);
       cursorY += 10;
     });
-
     // Cortes
     cursorY += 10;
     doc.text('Cortes:', marginLeft, cursorY);
     cursorY += 10;
-    advancedDetails.cuts.forEach((cut: { name: string }) => {
-      doc.text(`${cut.name}`, marginLeft + 10, cursorY);
+    advancedDetails.cuts.forEach((cut: { extent: string, name: string }) => {
+      doc.text(`${cut.extent} = ${cut.name}`, marginLeft + 10, cursorY);
       cursorY += 10;
     });
 
@@ -367,7 +408,6 @@ export class FurnitureDetailComponent {
     this.exportSucces('en formato de PDF como detalles avanzados');
   }
   
-  // Nueva función para agregar información de contacto
   addContactInfo(doc: jsPDF, contactInfo: any, pageWidth: number, pageHeight: number) {
     const marginBottom = 20;
     const cursorY = pageHeight - marginBottom;
@@ -382,6 +422,24 @@ export class FurnitureDetailComponent {
   
     // Línea decorativa
     doc.line(20, cursorY - 25, pageWidth - 20, cursorY - 25); // Línea horizontal
+  }
+
+  copy(event: Event) {
+    const target = event.target as HTMLButtonElement;
+    const text = target.previousElementSibling?.textContent;
+    navigator.clipboard.writeText(text || '');
+    target.disabled = true; // Disable the button
+    this.toastController.create({
+      message: `Texto copiado: ${text}`,
+      duration: 2000,
+      mode: 'ios',
+      position: 'bottom',
+      color: 'dark',
+      icon: 'copy-outline'
+    }).then(toast => toast.present());
+    setTimeout(() => {
+      target.disabled = false; // Re-enable the button after 2 seconds
+    }, 3000);
   }
 
   dismiss() {

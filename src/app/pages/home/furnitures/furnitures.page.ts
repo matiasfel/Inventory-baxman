@@ -26,90 +26,50 @@ export class FurnituresPage implements OnInit {
     private firestore: AngularFirestore
   ) {}
 
+  /* 
+
+  frontImg:
+  name:
+  description: 
+  costs: [
+    {
+      name:
+      value:
+    }
+  ]
+
+  cuts: [
+    {
+      extent:
+      name:
+    }
+  ]
+
+  accessories: [
+    {
+      name:
+      quantity:
+    }
+  ]
+
+  */
+
   ngOnInit() {
+    console.log('FurnituresPage initialized');
+
     this.furnitures = [
-
-      /*  
-        Datos a tener en cuenta:
-
-        // STRINGS
-        - frontImg: URL de la imagen principal del mueble.
-        - name: Nombre del mueble.
-        - description: Descripción del mueble.
-
-        // ARRAYS
-        - costs: Array de objetos con el costo y venta del mueble.
-        - cuts: Array de objetos con las medidas de los cortes del mueble.
-        - accessories: Array de objetos con los accesorios necesarios para el mueble
-
-        // OBJECTS
-        - cost: Objeto con el nombre y valor del costo del mueble.
-        - cut: Objeto con la medida del corte del mueble.
-        - accessory: Objeto con el nombre y cantidad del accesorio del mueble.
-
-        // !!!!!!!!!!!
-        El orden seria asi: Se agregan los campos requeridos (frontImg, name, description, costs, cuts, accessories)
-        y se agregan los valores correspondientes a cada campo, luego se sube la fotografia referencial a Cloudinary
-        y se copia la URL de la imagen en el campo frontImg, y asi con todos los datos para que finalmente se guarde
-        el nuevo mueble en la base de datos de FIREBASE. 10/01/25
-      */
-
-      {
-        frontImg: 'https://res-console.cloudinary.com/dmbg8ccsr/thumbnails/v1/image/upload/v1736285306/bHFxdWRmZm4zZm1hNzVtMHR2YzM=/drilldown',
-        name: 'Zapatero',
-        description: 'Un mueble blanco alto y delgado, con una puerta lisa y un tirador pequeño, ideal para espacios estrechos y almacenamiento vertical.',
-        costs: [
-          {
-            name: 'Costo',
-            value: 45000
-          },
-          {
-            name: 'Venta',
-            value: 80000,
-          }
-        ],
-        cuts: [
-          {
-            name: '180 x 30 = 2 lt',
-          },
-          {
-            name: '47 x 10 = 3 socalo',
-          },
-          {
-            name: '47 x 30 = 2 piso y base',
-          },
-          {
-            name: '47 x 28 = 7 divisiones',
-          },
-          {
-            name: '170 x 50 = 1 puerta',
-          },
-          {
-            name: '170 x 50 = 1 durolac',
-          }
-        ],
-        accessories: [
-          {
-            name: 'Tirador balín',
-            quantity: 1
-          },
-          {
-            name: 'Bisagra de 35mm',
-            quantity: 4
-          },
-          {
-            name: 'Tapacanto',
-            quantity: 25
-          },
-          {
-            name: 'Tornillos',
-            quantity: 50
-          }
-        ]
-        
-      }
     ];
+
     this.filterFurnitures();
+  }
+
+  // refresh content
+
+  handleRefresh(event: CustomEvent) {
+    setTimeout(() => {
+      window.location.reload();
+      (event.target as HTMLIonRefresherElement).complete();
+    }, 2000);
   }
 
   // logic to upload an image, convert image and upload to cloudinary
@@ -226,17 +186,8 @@ export class FurnituresPage implements OnInit {
     name = '';
     description = '';
     costs: { name: string; value: number }[] = [];
-    cuts = [];
-    accessories = [];
-
-    addCost() {
-      this.costs.push({ name: '', value: 0 });
-    }
-  
-    removeCost(index: number) {
-      this.costs.splice(index, 1);
-    }
-  
+    cuts: { extend: string; name: string }[] = [];
+    accessories: { name: string; value: number } [] = [];
 
   addFurniture(){
     const newFurniture = {
@@ -248,7 +199,43 @@ export class FurnituresPage implements OnInit {
       accessories: this.accessories
     };
 
+    // implement logic to add a new furniture and the database
+
     console.log(newFurniture);
   }
+
+  validateInput(event: any, type: string) {
+    const input = event.target as HTMLInputElement;
+    const invalidChars = [
+      '°', '_', '-', '¡',
+      '!', '@', '#', '$',
+      '%', '^', '&', '*',
+      '(', ')', '+', '/',
+      '{', '}', '[', ']',
+      '|', '\\', ':', ';',
+      '"', "'", '<', '>', 
+      '?'];
+
+    let value = input.value;
+    invalidChars.forEach(char => {
+      value = value.replace(new RegExp(`\\${char}`, 'g'), '');
+    });
+
+    if (type === 'input') {
+      this.name = value;
+    } else if (type === 'textarea') {
+      this.description = value;
+    }
+
+    input.value = value;
+  }
+
+/*   addCost() {
+    this.costs.push({ name: '', value: 0 });
+  }
+
+  removeCost(index: number) {
+    this.costs.splice(index, 1);
+  } */
 
 }

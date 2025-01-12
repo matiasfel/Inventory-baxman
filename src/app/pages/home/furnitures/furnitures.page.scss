@@ -151,40 +151,59 @@
 }
 
 .addFurniture {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+}
+
+.addFurniture .basicDetails {
+    background-color: #f4f4f4;
     width: 100%;
     height: auto;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
 }
 
-.addFurniture .info {
+.addFurniture .basicDetails h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0 0 20px 0;
+}
+
+.addFurniture .basicDetails div {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 20px;
 }
 
-.addFurniture .info h1 {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-    gap: 5px;
-
-    font-size: 1.2rem;
-    font-weight: 400;
-    
-    span {
-        font-size: 0.9rem;
-        color: #ff4d4d;
-    }
+.addFurniture .photo {
+    background-color: #f4f4f4;
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
 }
 
-.addFurniture .info ion-input {
-    margin-bottom: 10px;
-    --highlight-color-focused: #8da9c6;
-    --highlight-color-valid: #8da9c6;
+.addFurniture .photo h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0 0 20px 0;
 }
 
-.addFurniture .info ion-textarea {
-    --highlight-color-focused: #8da9c6;
-    --highlight-color-valid: #8da9c6;
+.addFurniture .avancedDetails {
+    background-color: #f4f4f4;
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+.addFurniture .avancedDetails h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0 0 20px 0;
 }
