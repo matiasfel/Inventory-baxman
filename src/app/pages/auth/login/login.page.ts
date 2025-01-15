@@ -50,12 +50,12 @@ export class LoginPage implements OnInit {
     console.log('Datos del modal:', data);
   }
 
-  async toastSuccessfull(message: string, duration: number, icon: string, positionAnchor: string) {
+  async toastSuccessfull(message: string, duration: number, icon: string) {
     const toast = await this.toastController.create({
       message: message,
       duration: duration,
       icon: icon,
-      positionAnchor: positionAnchor,
+      position: 'top',
       color: 'dark',
       mode: 'ios',
     });
@@ -66,7 +66,6 @@ export class LoginPage implements OnInit {
     const alert = await this.alertController.create({
       header: header,
       message: message,
-      mode: 'ios',
       buttons: ['OK'],
     });
   
@@ -104,7 +103,13 @@ export class LoginPage implements OnInit {
         this.storage.set('user', user);
         this.storage.set('sessionID', true);
         
-        this.toastSuccessfull("Inicio de sesión exitoso", 2000, 'log-in', 'version');
+        this.alertController.create({
+          header: 'Inicio de sesión',
+          message: 'Inicio de sesión exitoso.',
+          buttons: ['OK'],
+        }).then((alert) => {
+          alert.present();
+        });
         this.router.navigate(['/dashboard']);
   
       } catch (error) {
@@ -154,7 +159,7 @@ export class LoginPage implements OnInit {
 
     if (data && data.accepted) {
       this.firebaseService.register(this.regEmail, this.regPassword).then(async (r) => {
-      this.toastSuccessfull("Registro exitoso, ahora debes iniciar sesión", 2000, 'person-add-outline', 'bottom');
+      this.toastSuccessfull("Registro exitoso, ahora debes iniciar sesión", 2000, 'person-add-outline');
       this.toggleContainers();
       }).catch((error) => {
       this.alertError("Registro", "El correo electrónico ya está en uso.");
@@ -238,6 +243,38 @@ export class LoginPage implements OnInit {
         }, 250);
       }
     }
+  }
+
+  validateInput(event: any, type: string) {
+    const input = event.target as HTMLInputElement;
+    const invalidChars = [' ', '(', ')', '<', '>', '[', ']', ':', ';', '\\', ',', '\"', '/', '!', '#', '$', '%', '^', '&', '*', '=', '?', '{', '}', '|', '~', '`'];
+
+    let value = input.value;
+    invalidChars.forEach(char => {
+      value = value.replace(new RegExp(`\\${char}`, 'g'), '');
+    });
+
+    if (type === 'input') {
+      this.regEmail = value;
+    } 
+
+    input.value = value;
+  }
+
+  validateInputPass(event: any, type: string) {
+    const input = event.target as HTMLInputElement;
+    const invalidChars = [' '];
+
+    let value = input.value;
+    invalidChars.forEach(char => {
+      value = value.replace(new RegExp(`\\${char}`, 'g'), '');
+    });
+
+    if (type === 'input') {
+      this.regPassword = value;
+    } 
+
+    input.value = value;
   }
 
 }

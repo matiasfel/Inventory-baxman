@@ -99,16 +99,6 @@
           </div>
           <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
         </button>
-
-        <hr>
-
-        <button (click)="supportRequests()">
-          <div>
-            <ion-icon name="help-buoy-outline" id="insideIcon"></ion-icon>
-            <span> Soporte </span>
-          </div>
-          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
-        </button>
         
         <hr>
 
@@ -166,76 +156,6 @@
       <p> Ayuda y soporte </p>
 
       <div class="buttons">
-
-        <button id="FAQs">
-          <div>
-            <ion-icon name="help-circle-outline" id="insideIcon"></ion-icon>
-            <span> Preguntas frecuentes (FAQs) </span>
-          </div>
-          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
-        </button>
-
-        <ion-modal trigger="FAQs" mode="ios">
-          <ng-template>
-          <ion-header>
-            <ion-toolbar>
-            <ion-title>Preguntas frecuentes (FAQs)</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="dismissModal()">Cerrar</ion-button>
-            </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content>
-    
-            <div class="faqContainer">
-    
-              <div class="question">
-                <h1> ¿De que trata la aplicación? </h1>
-                <p> 
-                  Inventory esta creada con una finalidad para ayudar a organizar y mantener un 
-                  orden en tu inventario de productos, ya sea para uso personal o para tu negocio. 
-                </p>
-              </div>
-
-              <div class="question">
-                <h1> ¿Quien es el creador de la aplicación? </h1>
-                <p> 
-                  Soy un estudiante de Ingenieria en informatica en 2do año de carrera, el cual
-                  he desarrollado esta aplicación como proyecto personal y en ayuda a su padre.
-                </p>
-              </div>
-            
-              <div class="question">
-                <h1> ¿Donde se guarda mi información? </h1>
-                <p> 
-                  Tu información es almacenada en servidores en la nube, se utiliza Firebase Database 
-                  para datos livianos y Cloudinary para imagenes. Existe información sensible la cual 
-                  es encriptada y protegida como por ejemplo, tu contraseña.
-                </p>
-              </div>
-
-              <div class="question">
-                <h1> ¿Como puedo contactar con el desarrollador? </h1>
-                <p> 
-                  Puedes enviarme un correo electronico mediante el boton de "Soporte" que se encuen
-                  tra en la sección de "Cuenta" o puedes contactarme mediante mis redes sociales.
-                </p>
-              </div>
-
-              <div class="question">
-                <h1> Redes sociales </h1>
-                <p> 
-                  Por definir...
-                </p>
-              </div>
-
-            </div>
-    
-          </ion-content>
-          </ng-template>
-        </ion-modal>
-
-        <hr>
 
         <button id="termsAndConditions">
           <div>
@@ -320,6 +240,14 @@
         </ion-modal>
 
         <hr>
+
+        <button (click)="supportRequests()">
+          <div>
+            <ion-icon name="help-buoy-outline" id="insideIcon"></ion-icon>
+            <span> Soporte </span>
+          </div>
+          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
+        </button>
 
       </div>
 

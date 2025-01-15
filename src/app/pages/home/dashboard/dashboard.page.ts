@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
-import { FirebaseService } from 'src/app/services/firebase/firebase.service';
+import { Network } from '@capacitor/network';
 
 @Component({
   standalone: false,
@@ -13,12 +13,36 @@ export class DashboardPage implements OnInit {
 
   constructor(
     private storage: Storage,
-    private router: Router,
-    private firebaseService: FirebaseService
+    private alertController: AlertController
   ) { }
 
   ngOnInit() {
+    
+    this.checkInternetConnection();
     this.storage.create();
+  }
+
+  async checkInternetConnection() {
+    const status = await Network.getStatus();
+    if (!status.connected) {
+      const alert = await this.alertController.create({
+        header: 'Inventory',
+        message: 'No tienes conexión a internet, por favor revisa tu conexión para utilizar correctamente la aplicación.',
+        buttons: [
+          {
+            text: 'OK',
+            role: 'cancel'
+          },
+          {
+            text: 'Actualizar',
+            handler: () => {
+              window.location.reload();
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
   }
 
 }

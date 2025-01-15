@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn:'root'
@@ -19,7 +20,7 @@ import { Storage } from '@ionic/storage-angular';
 
     canActivate : CanActivateFn = async(route,state) =>{
       const SessionActive = await this.storage.get("sessionID");
-      if(SessionActive == true){
+      if(SessionActive == true ){
         return this.route.createUrlTree(['/dashboard']);
     }
       else{

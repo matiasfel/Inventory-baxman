@@ -71,14 +71,12 @@ export class SettingsPage implements OnInit {
       await this.alertController.create({
         header: 'Editar perfil',
         message: 'Por favor, ingresa un nombre válido',
-        mode: 'ios',
         buttons: ['OK']
       }).then(alert => alert.present());
     } else if (/[@.,;{}[\]]/.test(this.newDisplayName)) {
       await this.alertController.create({
         header: 'Editar perfil',
         message: 'El nombre no puede contener caracteres especiales',
-        mode: 'ios',
         buttons: ['OK']
       }).then(alert => alert.present());
     } else {
@@ -138,7 +136,6 @@ export class SettingsPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Reautenticación requerida',
       message: 'Para cambiar tu contraseña, por favor ingresa tu correo electrónico y contraseña actual',
-      mode: 'ios',
       inputs: [
         {
           name: 'email',
@@ -164,7 +161,6 @@ export class SettingsPage implements OnInit {
               const newPasswordAlert = await this.alertController.create({
                 header: 'Cambiar contraseña',
                 message: 'Ingresa tu nueva contraseña, esta será la nueva contraseña asociada a tu cuenta.',
-                mode: 'ios',
                 inputs: [
                   {
                     name: 'actualPassword',
@@ -190,7 +186,6 @@ export class SettingsPage implements OnInit {
                         await this.alertController.create({
                           header: 'Cambiar contraseña',
                           message: 'Tu contraseña actual no coincide con la ingresada, por favor intentalo de nuevo',
-                          mode: 'ios',
                           buttons: ['OK']
                         }).then(alert => alert.present());
                         return;
@@ -200,7 +195,6 @@ export class SettingsPage implements OnInit {
                         await this.alertController.create({
                           header: 'Cambiar contraseña',
                           message: 'La nueva contraseña no puede ser igual a la actual, por favor intentalo de nuevo',
-                          mode: 'ios',
                           buttons: ['OK']
                         }).then(alert => alert.present());
                         return;
@@ -212,7 +206,6 @@ export class SettingsPage implements OnInit {
                       await this.alertController.create({
                         header: 'Cambiar contraseña',
                         message: 'Tu contraseña nueva debe tener al menos 8 caracteres, una mayúscula, un número, un carácter especial y no debe contener espacios.',
-                        mode: 'ios',
                         buttons: ['OK']
                       }).then(alert => alert.present());
                       return;
@@ -245,7 +238,6 @@ export class SettingsPage implements OnInit {
               await this.alertController.create({
                 header: 'Autenficación fallida',
                 message: 'Correo electrónico o contraseña incorrectos',
-                mode: 'ios',
                 buttons: ['OK']
               }).then(alert => alert.present());
             }
@@ -261,7 +253,6 @@ export class SettingsPage implements OnInit {
     this.alertController.create({
       header: '¿Necesitas ayuda?',
       message: 'Por favor, mánda un correo a matiasbaxman@gmail.com con tu problema y te respondere lo más pronto posible.',
-      mode: 'ios',
       buttons: [
         {
           text: 'Enviar correo',
@@ -281,7 +272,6 @@ export class SettingsPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Reautenticación requerida',
       message: 'Para eliminar tu cuenta, por favor ingresa tu correo electrónico y contraseña actual.',
-      mode: 'ios',
       inputs: [
         {
           name: 'email',
@@ -308,7 +298,6 @@ export class SettingsPage implements OnInit {
                 header: 'Confirmar eliminación',
                 subHeader: '¿Estás seguro?',
                 message: 'Esta acción no se puede deshacer y se eliminaran todos tus datos de nuestros archivos. Por favor, escribe "borrar cuenta" para confirmar.',
-                mode: 'ios',
                 inputs: [
                   {
                     name: 'confirmation',
@@ -328,7 +317,6 @@ export class SettingsPage implements OnInit {
                         await this.alertController.create({
                           header: 'Error',
                           message: 'Debes escribir "borrar cuenta" para confirmar la eliminación.',
-                          mode: 'ios',
                           buttons: ['OK']
                         }).then(alert => alert.present());
                         return;
@@ -349,7 +337,6 @@ export class SettingsPage implements OnInit {
                         await this.alertController.create({
                           header: 'Error',
                           message: 'Error al eliminar la cuenta',
-                          mode: 'ios',
                           buttons: ['OK']
                         }).then(alert => alert.present());
                       }
@@ -363,7 +350,6 @@ export class SettingsPage implements OnInit {
               await this.alertController.create({
                 header: 'Autenticación fallida',
                 message: 'Correo electrónico o contraseña incorrectos',
-                mode: 'ios',
                 buttons: ['OK']
               }).then(alert => alert.present());
             }
@@ -379,7 +365,6 @@ export class SettingsPage implements OnInit {
     this.alertController.create({
       header: 'Cerrar sesión',
       message: '¿Estás seguro de cerrar sesión?',
-      mode: 'ios',
       buttons: [
         {
           text: 'Cancelar',

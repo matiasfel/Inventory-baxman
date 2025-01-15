@@ -78,6 +78,8 @@
           color="light"
 
           name="regEmail"
+
+          (ionInput)="validateInput($event, 'input')"
           [(ngModel)]="regEmail"
         >
           <ion-icon slot="start" name="mail-outline"></ion-icon>
@@ -95,6 +97,7 @@
 
           (ionInput)="onPasswordInput($event)"
 
+          (ionInput)="validateInputPass($event, 'input')"
           name="regPassword"
           [(ngModel)]="regPassword"
         >

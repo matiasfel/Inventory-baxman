@@ -40,13 +40,16 @@
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content>
-                <p id="description">{{ furniture.description }}</p>
+
+                <p *ngIf="furniture.description.length > 0" id="description">{{ furniture.description }}</p>
+                <p *ngIf="furniture.description.length === 0" id="description">No existe una descripción para este mueble, agrega una.</p>
+
                 <div class="buttons">
                   <button (click)="editFurniture()">
                     <p>Editar</p>
                     <ion-icon name="create"></ion-icon>
                   </button>
-                  <button (click)="deleteFurniture()">
+                  <button (click)="deleteFurniture(furniture)">
                     <p>Eliminar</p>
                     <ion-icon name="trash"></ion-icon>
                   </button>
@@ -81,7 +84,7 @@
       <ion-toolbar>
         <ion-title>Agregar mueble</ion-title>
         <ion-buttons slot="start">
-          <ion-button (click)="dismissModal()">Cancelar</ion-button>
+            <ion-button (click)="dismissModal()">Cancelar</ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
           <ion-button (click)="addFurniture()">Agregar</ion-button>
@@ -101,9 +104,11 @@
               label="Nombre"
               label-placement="stacked" 
               fill="outline" 
-              placeholder="¡Escoje un nombre interesante!"
-              (ionInput)="validateInput($event, 'input')">
+              (ionInput)="validateInput($event, 'input')"
+              name="name"
+              [(ngModel)]="name">
             </ion-input>
+            <p>Opcional</p>
 
             <ion-textarea 
               mode="md"
@@ -111,21 +116,191 @@
               label-placement="stacked" 
               fill="outline"
               [autoGrow]="true"
-              placeholder="¡Escoje una descripción interesante!"
               [counter]="true"
-              maxlength="150"
-              (ionInput)="validateInput($event, 'textarea')">
+              maxlength="500"
+              (ionInput)="validateInput($event, 'textarea')"
+              name="description"
+              [(ngModel)]="description">
             </ion-textarea>
           </div>
 
         </section>
 
         <section class="photo">
-          <h1>Fotografía</h1>
-        </section>
+          <h1>Fotografías</h1>
+        
+          <div class="photoContainer">
+            <div class="photoCard" *ngFor="let photo of photos; let i = index">
+              <img [src]="photo" alt="Foto" class="photoImage">
+              <button class="deleteButton" (click)="removePhoto(i)">
+                <ion-icon name="trash-bin"></ion-icon>
+              </button>
+            </div>
+        
+            <input 
+              type="file" 
+              accept="image/*" 
+              (change)="addPhoto($event)" 
+              id="fileInput" 
+              class="fileInput"
+            >
+            <label for="fileInput" class="addPhotoButton">
+              <ion-icon name="add-circle"></ion-icon>
+            </label>
+          </div>
+        </section>        
 
         <section class="avancedDetails">
           <h1>Detalles avanzados</h1>
+
+          <div 
+            class="divisor"
+            [ngStyle]="{
+              'padding': costs.length > 0 ? '20px' : '0',
+              'border-radius': costs.length > 0 ? '15px' : '0',
+              'background-color': costs.length > 0 ? '#fff' : 'transparent'
+              }"
+          >
+            <h2 *ngIf="costs.length > 0">Costos</h2>
+            <div class="item" *ngFor="let cost of costs; let i = index ">
+              <ion-input 
+                mode="md"
+                label="Nombre"
+                label-placement="stacked" 
+                fill="solid"
+                type="text"
+                [(ngModel)]="cost.name">
+              </ion-input>
+
+              <ion-input 
+                labelPlacement="floating" 
+                value="hi@ionic.io">
+                <div slot="label">Email <ion-text color="danger">(Required)</ion-text></div>
+              </ion-input>
+
+              <ion-input 
+                mode="md"
+                label-placement="stacked" 
+                label="Valor"
+                fill="solid"
+                type="number"
+                [(ngModel)]="cost.value">
+              </ion-input>
+
+              <button class="removeButton" (click)="removeCost(i)">
+                <ion-icon name="trash-bin"></ion-icon>
+              </button>
+            </div>
+
+            <button 
+              class="customButton" 
+              (click)="addCost()" 
+              [ngStyle]="{
+                'background-color': costs.length > 0 ? '#4CAF50' : '#2772b0'
+                }"
+            >
+              <p *ngIf="costs.length === 0">Agregar costos</p>
+              <p *ngIf="costs.length > 0">Agregar item</p>
+            </button>
+            
+          </div>
+
+            <div 
+            class="divisor"
+            [ngStyle]="{
+              'padding': cuts.length > 0 ? '20px' : '0',
+              'border-radius': cuts.length > 0 ? '15px' : '0',
+              'background-color': cuts.length > 0 ? '#fff' : 'transparent'
+              }"
+          >
+            <h2 *ngIf="cuts.length > 0">Cortes</h2>
+            <div class="item" *ngFor="let cut of cuts; let i = index ">
+              <ion-input 
+                mode="md"
+                label="Medida"
+                label-placement="stacked" 
+                fill="solid"
+                type="text"
+                [(ngModel)]="cut.extent">
+              </ion-input>
+
+              <ion-input 
+                mode="md"
+                label-placement="stacked" 
+                label="Nombre"
+                fill="solid"
+                type="text"
+                [(ngModel)]="cut.name">
+              </ion-input>
+
+              <button class="removeButton" (click)="removeCut(i)">
+                <ion-icon name="trash-bin"></ion-icon>
+              </button>
+            </div>
+
+            <button 
+              class="customButton" 
+              (click)="addCut()" 
+              [ngStyle]="{
+                'background-color': cuts.length > 0 ? '#4CAF50' : '#2772b0'
+                }"
+            >
+              <p *ngIf="cuts.length === 0">Agregar cortes</p>
+              <p *ngIf="cuts.length > 0">Agregar item</p>
+            </button>
+          </div>
+
+          <div 
+            class="divisor"
+            [ngStyle]="{
+              'padding': accessories.length > 0 ? '20px' : '0',
+              'border-radius': accessories.length > 0 ? '15px' : '0',
+              'background-color': accessories.length > 0 ? '#fff' : 'transparent',
+              }"
+          >
+            <h2 *ngIf="accessories.length > 0">Accesorios</h2>
+            <div class="item" *ngFor="let accesory of accessories; let i = index ">
+              <ion-input 
+                mode="md"
+                label="Nombre"
+                label-placement="stacked" 
+                fill="solid"
+                type="text"
+                [(ngModel)]="accesory.name">
+              </ion-input>
+
+              <ion-input 
+                mode="md"
+                label-placement="stacked" 
+                label="Cantidad"
+                fill="solid"
+                type="number"
+                [(ngModel)]="accesory.quantity">
+              </ion-input>
+
+              <button class="removeButton" (click)="removeAccessory(i)">
+                <ion-icon name="trash-bin"></ion-icon>
+              </button>
+            </div>
+
+            <button 
+              class="customButton" 
+              (click)="addAccessory()" 
+              [ngStyle]="{
+                'background-color': accessories.length > 0 ? '#4CAF50' : '#2772b0'
+                }"
+            >
+              <p *ngIf="accessories.length === 0">Agregar accesorios</p>
+              <p *ngIf="accessories.length > 0">Agregar item</p>
+            </button>
+          </div>
+
+          <ion-loading
+            #loading
+            message="Subiendo las fotos y guardando el mueble..."
+            spinner="crescent">
+          </ion-loading>
+        
         </section>
 
       </div>
@@ -133,5 +308,9 @@
     </ion-content>
     </ng-template>
   </ion-modal>
+
+  <div id="version">
+    <p></p>
+  </div>
 
 </ion-content>

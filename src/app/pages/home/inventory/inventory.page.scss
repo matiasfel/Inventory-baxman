@@ -1,0 +1,22 @@
+
+.inventory {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+}
+
+.inventory h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.inventory span {
+    color: red;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}

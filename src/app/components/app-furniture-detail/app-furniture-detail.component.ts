@@ -37,11 +37,15 @@ import jsPDF from 'jspdf';
           <div class="desc">
 
             <div class="title">
-              <h2>Descripción del mueble</h2>
-              <ion-icon name="information-circle"></ion-icon>
+              <h2 *ngIf="furniture.description.length > 0" >Descripción del mueble</h2>
+              <ion-icon *ngIf="furniture.description.length > 0"  name="information-circle"></ion-icon>
+
+              <h2 *ngIf="furniture.description === '' " style="color: #c6000e;">Descripción del mueble</h2>
+              <ion-icon *ngIf="furniture.description === '' " name="information-circle" color="danger"></ion-icon>
             </div>
 
             <p>{{ furniture.description }}</p>
+            <p *ngIf="furniture.description === '' ">No existe una descripción para este mueble, agrega una.</p>
           </div>
         </div>
 
@@ -50,7 +54,9 @@ import jsPDF from 'jspdf';
             <h2>Imagen del mueble</h2>
             <ion-icon name="image"></ion-icon>
           </div>
-          <img [src]="furniture.frontImg">
+          <div *ngFor="let photo of furniture.photos">
+            <img [src]="photo">
+          </div>
         </div>
 
         <div class="container">
@@ -60,15 +66,23 @@ import jsPDF from 'jspdf';
           </div>
 
           <ion-accordion-group expand="inset" [multiple]="true">
-
-          <ion-accordion value="first">
+            <ion-accordion value="first" toggleIconSlot="end">
               <ion-item slot="header">
                 <h2>Costos</h2>
               </ion-item>
-              <div class="ion-padding" slot="content">
+              <div class="ion-padding" slot="content" *ngIf="furniture.costs.length > 0">
                 <ion-item *ngFor="let cost of furniture.costs">
                   <ion-label>{{ cost.name }}: {{ cost.value | currency }}</ion-label>
                   <button class="copy" (click)="copy($event)"> Copiar </button>
+                </ion-item>
+                <ion-item> 
+                  <ion-label> <strong>Total: {{ totalValue | currency}}</strong> </ion-label> 
+                  <button class="copy" (click)="copy($event)"> Copiar </button>
+                </ion-item>
+              </div>
+              <div class="ion-padding" slot="content" *ngIf="furniture.costs.length === 0">
+                <ion-item lines="none">
+                  <ion-label> No hay costos asociados a este mueble.</ion-label>
                 </ion-item>
               </div>
             </ion-accordion>
@@ -77,10 +91,16 @@ import jsPDF from 'jspdf';
               <ion-item slot="header">
                 <h2>Cortes</h2>
               </ion-item>
-              <div class="ion-padding" slot="content">
+              <div class="ion-padding" slot="content" *ngIf="furniture.cuts.length > 0">
                 <ion-item *ngFor="let cut of furniture.cuts">
                   <ion-label>{{cut.extent}} = {{ cut.name }}</ion-label>
                   <button class="copy" (click)="copy($event)"> Copiar </button>
+                </ion-item>
+              </div>
+              
+              <div class="ion-padding" slot="content" *ngIf="furniture.cuts.length === 0">
+                <ion-item lines="none">
+                  <ion-label> No hay cortes asociados a este mueble.</ion-label>
                 </ion-item>
               </div>
             </ion-accordion>
@@ -89,10 +109,15 @@ import jsPDF from 'jspdf';
               <ion-item slot="header">
                 <h2>Accesorios</h2>
               </ion-item>
-              <div class="ion-padding" slot="content">
+              <div class="ion-padding" slot="content" *ngIf="furniture.accessories.length > 0">
                 <ion-item *ngFor="let accessory of furniture.accessories">
                   <ion-label>{{ accessory.name }}: {{ accessory.quantity }}</ion-label>
                   <button class="copy" (click)="copy($event)"> Copiar </button>
+                </ion-item>
+              </div>
+              <div class="ion-padding" slot="content" *ngIf="furniture.accessories.length === 0">
+                <ion-item lines="none">
+                  <ion-label> No hay accesorios asociados a este mueble.</ion-label>
                 </ion-item>
               </div>
             </ion-accordion>
@@ -191,6 +216,7 @@ import jsPDF from 'jspdf';
   .viewFurniture .container .name p {
     font-size: 1.2rem;
     margin: 0 0 1.5rem;
+    opacity: 0.6;
   }
 
   .viewFurniture .container .desc .title {
@@ -204,13 +230,13 @@ import jsPDF from 'jspdf';
   .viewFurniture .container .desc p {
     font-size: 1.2rem;
     margin: 0;
+    opacity: 0.6;
   }
 
   // Basic details
 
   .viewFurniture .container img {
     border-radius: 1rem;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
   }
 
   .separator {
@@ -225,6 +251,12 @@ import jsPDF from 'jspdf';
 
 export class FurnitureDetailComponent {
   @Input() furniture: any;
+
+  totalValue: number = 0;
+
+  ngOnInit() {
+    this.totalValue = this.furniture.costs.reduce((acc: number, cost: { value: number }) => acc + cost.value, 0);
+  }
 
   constructor(
     private modalController: ModalController,
