@@ -18,7 +18,6 @@ export class LoginPage implements OnInit {
 
   regEmail: string = "";
   regPassword: string = "";
-  regConfPassword: string = "";
 
   passwordStrength: number = 0;
   passwordStrengthColor: string = "danger";
@@ -37,6 +36,27 @@ export class LoginPage implements OnInit {
     await this.storage.set('sessionID', false);
   }
 
+  /********** Toast and Alert functions **********/
+  async alert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  async toast(message: string, icon: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      mode: 'ios',
+      duration: 2000,
+      icon: icon
+    });
+   await toast.present();
+  }
+
+  /********** Open modal terms **********/
   async openModalTerms() {
     const modal = await this.modalController.create({
       component: TermsModalComponent,
@@ -44,52 +64,29 @@ export class LoginPage implements OnInit {
     });
 
     await modal.present();
-
-    // Opcional: Recoge el resultado cuando se cierra el modal
-    const { data } = await modal.onWillDismiss();
-    console.log('Datos del modal:', data);
   }
 
-  async toastSuccessfull(message: string, duration: number, icon: string) {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: duration,
-      icon: icon,
-      position: 'top',
-      color: 'dark',
-      mode: 'ios',
-    });
-    toast.present();
-  }
-
-  async alertError(header: string, message: string) {
-    const alert = await this.alertController.create({
-      header: header,
-      message: message,
-      buttons: ['OK'],
-    });
-  
-    await alert.present();
-  }
-
+  /********** Login function **********/
   async loginForm() {
-    console.log('loginForm is working');
   
     if (this.email === '' || this.password === '') {
-      this.alertError("Inicio de sesión", "Debes completar todos los campos");
+      this.alert('Inicio de sesión', 'Para iniciar sesión debes completar todos los campos.');
+      console.log('empty fields');
       return; 
     }
   
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
     if (!emailPattern.test(this.email)) {
-      this.alertError("Inicio de sesión", "Por favor ingresa un correo electrónico válido.");
+      this.alert('Inicio de sesión', 'El correo electrónico no es válido.');
+      console.log('email pattern');
       return;
     }
   
     this.firebaseService.login(this.email, this.password).then(async (res) => {
       if (!res.user) {
-        this.alertError("Inicio de sesión", "Error al obtener el usuario, pide ayuda.");
+        this.alert('Inicio de sesión', 'El correo electrónico o la contraseña son incorrectos.');
+        console.error("Error al iniciar sesión:", res);
         return;
       }
   
@@ -102,51 +99,44 @@ export class LoginPage implements OnInit {
   
         this.storage.set('user', user);
         this.storage.set('sessionID', true);
-        
-        this.alertController.create({
-          header: 'Inicio de sesión',
-          message: 'Inicio de sesión exitoso.',
-          buttons: ['OK'],
-        }).then((alert) => {
-          alert.present();
-        });
         this.router.navigate(['/dashboard']);
+
+        this.alert('Inicio de sesión', 'Inicio de sesión exitoso.');
   
       } catch (error) {
-        this.alertError("Inicio de sesión", "Ha ocurrido un error al intentar iniciar sesión, pide ayuda.");
+        // Handle Errors here.
+        this.alert('Inicio de sesión', 'El correo electrónico o la contraseña son incorrectos.');
       }
     }).catch((error) => {
-      this.alertError("Inicio de sesión", "Usuario o contraseña incorrectos.");
-      console.error("Error al iniciar sesión:", error);
+      // Handle Errors here.
+      this.alert('Inicio de sesión', 'El correo electrónico o la contraseña son incorrectos.');
     });
   }
 
+  /********** Register forms **********/
   async registerForm() {
-    console.log('registerForm is working');
 
-    if (this.regEmail === '' || this.regPassword === "" || this.regConfPassword === '') {
-      this.alertError("Registro", "Debes completar todos los campos.");
+    if (this.regEmail === '' || this.regPassword === "" ) {
+      this.alert('Registro', 'Para registrarse debes completar todos los campos.');
+      console.log('empty fields');
       return; 
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailPattern.test(this.regEmail)) {
-      this.alertError("Registro", "Por favor ingresa un correo electrónico válido.");
+      this.alert('Registro', 'El correo electrónico no es válido.');
+      console.log('email pattern');
       return;
     }
 
-    const passwordPattern = /^(?=.*\d)(?=.*[A-Z])(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.\-#*])[A-Za-z\d.\-#*]+$/;
 
-    if (!passwordPattern.test(this.regPassword) || /\s/.test(this.regPassword)) {
-      this.alertError("Registro", 'La contraseña debe tener al menos 8 caracteres, una mayúscula, un número, un carácter especial y no debe contener espacios.');
+    if (!passwordPattern.test(this.regPassword)) {
+      this.alert('Registro', 'La contraseña como minimo debe tener una miniscula, una mayúscula, un número y un carácter especial.');
+      console.log('password pattern');
       return;
-    }
-
-    if (this.regPassword !== this.regConfPassword) {
-      this.alertError("Registro", "Las contraseñas no coinciden.");
-      return;
-    }
+    }    
 
     const modal = await this.modalController.create({
       component: TermsModalComponent,
@@ -158,14 +148,19 @@ export class LoginPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.accepted) {
-      this.firebaseService.register(this.regEmail, this.regPassword).then(async (r) => {
-      this.toastSuccessfull("Registro exitoso, ahora debes iniciar sesión", 2000, 'person-add-outline');
-      this.toggleContainers();
+        this.firebaseService.register(this.regEmail, this.regPassword).then(async (r) => {
+        this.toggleContainers();
+
+        this.toast('Registro exitoso', 'person-add');
+        console.log('register successful');
       }).catch((error) => {
-      this.alertError("Registro", "El correo electrónico ya está en uso.");
+        // Handle Errors here.
+        this.alert('Registro', 'El correo electrónico ya está en uso.');
+        console.error("Error al registrar:", error);
       });
     } else {
-      this.alertError("Registro", "Debes aceptar los términos y condiciones para registrarte.");
+      this.alert('Registro', 'Debes aceptar los términos y condiciones.');
+      console.log('terms not accepted');
     }
 
   }
@@ -205,6 +200,7 @@ export class LoginPage implements OnInit {
     }
   }
 
+    /********** Toggle containers (login / register) **********/
   async toggleContainers() {
 
     const loginForm = document.getElementsByClassName('loginForm')[0] as HTMLElement;
@@ -229,7 +225,6 @@ export class LoginPage implements OnInit {
       } else {
         this.regEmail = '';
         this.regPassword = '';
-        this.regConfPassword = '';
 
         loginForm.style.zIndex = '2';
         registerForm.style.zIndex = '1';
@@ -245,9 +240,19 @@ export class LoginPage implements OnInit {
     }
   }
 
+
+  /********** Validate inputs for register **********/
   validateInput(event: any, type: string) {
     const input = event.target as HTMLInputElement;
-    const invalidChars = [' ', '(', ')', '<', '>', '[', ']', ':', ';', '\\', ',', '\"', '/', '!', '#', '$', '%', '^', '&', '*', '=', '?', '{', '}', '|', '~', '`'];
+    const invalidChars = [
+      ' ', '(', ')', '<', '>', 
+      '[', ']', ':', ';', ',', 
+      '/', '#', '$', '%', '^', 
+      '&', '*', '!', '=', '?', 
+      '{', '}', '|', '~', '`', 
+      '\"', '\\', '¡', '-', '¨',
+      '´', '+', "'", '¿', "´"
+    ];
 
     let value = input.value;
     invalidChars.forEach(char => {
@@ -256,7 +261,9 @@ export class LoginPage implements OnInit {
 
     if (type === 'input') {
       this.regEmail = value;
-    } 
+    } else if (type === 'input') {
+      this.email = value;
+    }
 
     input.value = value;
   }

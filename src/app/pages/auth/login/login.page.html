@@ -96,28 +96,12 @@
           color="light"
 
           (ionInput)="onPasswordInput($event)"
-
           (ionInput)="validateInputPass($event, 'input')"
           name="regPassword"
           [(ngModel)]="regPassword"
         >
           <ion-icon slot="start" name="lock-open-outline"></ion-icon>
-        </ion-input>
-
-        <ion-input 
-          label="Confirma tu contraseña" 
-          label-placement="floating" 
-          fill="outline"
-          type="password"
-
-          mode="md"
-        
-          color="light"
-
-          name="regConfPassword"
-          [(ngModel)]="regConfPassword"
-        >
-          <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+          <ion-input-password-toggle slot="end" color="dark" mode="ios" label-placement="floating"></ion-input-password-toggle>
         </ion-input>
 
         <div>
@@ -142,10 +126,6 @@
         </a>
       </form>
     </section>
-
-    <div id="version">
-      <p>Inventory v1.0.0</p>
-    </div>
     
   </div>
 

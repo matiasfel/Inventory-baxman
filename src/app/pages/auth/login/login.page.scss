@@ -25,11 +25,8 @@ $light-color      :  #f6f8fc;
 
     // Contenedor principal
 
-    body {
-        background-color: $background-color;
-    }
-
     #containerLog {
+        background-color: $background-color;
         text-align: center;
     }
 
@@ -89,7 +86,7 @@ $light-color      :  #f6f8fc;
         bottom: 0;
         z-index: 2;
 
-        transition: all 0.25s ease;
+        transition: transform 0.25s ease;
     }
 
     .loginForm strong {
@@ -144,7 +141,7 @@ $light-color      :  #f6f8fc;
         justify-content: center;
         align-items: center;
 
-        transition: all 0.25s ease;
+        transition: transform 0.25s ease;
     }
 
     .registerForm form {
@@ -188,17 +185,4 @@ $light-color      :  #f6f8fc;
         width: 100%;
         margin: 0 auto;
         max-width: 400px;
-    }
-
-    // Marca de la aplicación, version y etc
-
-    #version {
-        text-align: center;
-        color: $subtitle-color;
-
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 0;
-        z-index: 3;
     }

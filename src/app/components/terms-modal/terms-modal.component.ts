@@ -155,11 +155,9 @@ export class TermsModalComponent {
 
   dismiss() {
     this.modalController.dismiss();
-    console.log('Términos y condiciones no aceptados');
   }
 
   accept() {
     this.modalController.dismiss({ accepted: true });
-    console.log('Términos y condiciones aceptados');
   }
 }
