@@ -101,6 +101,9 @@ export class LoginPage implements OnInit {
         this.storage.set('sessionID', true);
         this.router.navigate(['/dashboard']);
 
+        this.email = '';
+        this.password = '';
+
         this.alert('Inicio de sesión', 'Inicio de sesión exitoso.');
   
       } catch (error) {
@@ -165,6 +168,7 @@ export class LoginPage implements OnInit {
 
   }
 
+  /********** Password strength **********/
   onPasswordInput(event: any): void {
     this.regPassword = event.target.value;
     this.passwordStrength = this.calculatePasswordStrength(this.regPassword);
@@ -200,7 +204,7 @@ export class LoginPage implements OnInit {
     }
   }
 
-    /********** Toggle containers (login / register) **********/
+  /********** Toggle containers (login / register) **********/
   async toggleContainers() {
 
     const loginForm = document.getElementsByClassName('loginForm')[0] as HTMLElement;

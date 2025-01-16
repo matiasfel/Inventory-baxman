@@ -30,6 +30,7 @@ export class SettingsPage implements OnInit {
     private router: Router
   ) { }
 
+  /********** all functions on the start the page  **********/
   async ngOnInit() {
     await this.loadUser();
     this.newDisplayName = this.displayName;
@@ -53,6 +54,27 @@ export class SettingsPage implements OnInit {
     }
   }
 
+  /********** Toast and Alert functions **********/
+  async alert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  async toast(message: string, icon: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      mode: 'ios',
+      duration: 2000,
+      icon: icon
+    });
+    await toast.present();
+  }
+
+  /********** dismiss the modal function **********/
   async dismissModal() {
     try {
       await this.modalController.dismiss();
@@ -63,26 +85,16 @@ export class SettingsPage implements OnInit {
     }
   }
 
-  //
-
+  /********** save changes function **********/
   async saveChanges(){
 
     if (this.newDisplayName === '') {
-      await this.alertController.create({
-        header: 'Editar perfil',
-        message: 'Por favor, ingresa un nombre válido',
-        buttons: ['OK']
-      }).then(alert => alert.present());
+      this.alert('Editar perfil', 'El nombre no puede estar vacío');
     } else if (/[@.,;{}[\]]/.test(this.newDisplayName)) {
-      await this.alertController.create({
-        header: 'Editar perfil',
-        message: 'El nombre no puede contener caracteres especiales',
-        buttons: ['OK']
-      }).then(alert => alert.present());
+      this.alert('Editar perfil', 'El nombre no puede contener caracteres especiales');
     } else {
       
       await this.firebaseService.updateName(this.newDisplayName);
-
       await this.firestore.collection('users').doc(this.uid).update({
         displayName: this.newDisplayName,
       });
@@ -94,44 +106,25 @@ export class SettingsPage implements OnInit {
       });
 
       this.displayName = this.newDisplayName;
-      
       this.dismissModal();
-
-      await this.toastController.create({
-        message: 'Cambios guardados exitosamente',
-        duration: 2000,
-        icon: 'checkmark',
-        position: 'bottom',
-        positionAnchor: 'version',
-        color: 'dark',
-        mode: 'ios'
-      }).then(toast => toast.present());
-
+      this.alert('Editar perfil', 'Nombre actualizado exitosamente');
     }
-
   }
 
-  //
-
+  /********** Copy uid function **********/
   async copyUID() {
     const button = document.getElementById('copyUID') as HTMLButtonElement;
     if (button) {
       button.disabled = true;
       navigator.clipboard.writeText(this.uid);
-      this.toastController.create({
-        message: 'UID copiado al portapapeles',
-        duration: 2000,
-        icon: 'clipboard',
-        positionAnchor: 'version',
-        color: 'dark',
-        mode: 'ios'
-      }).then(toast => toast.present());
+      this.toast('UID copiado al portapapeles', 'copy-outline');
       setTimeout(() => {
         button.disabled = false;
       }, 3000);
     }
   }
 
+  /********** Change password function **********/
   async changePassword() {
     const alert = await this.alertController.create({
       header: 'Reautenticación requerida',
@@ -183,50 +176,27 @@ export class SettingsPage implements OnInit {
                     handler: async (newData) => {
 
                       if (newData.actualPassword !== data.password) {
-                        await this.alertController.create({
-                          header: 'Cambiar contraseña',
-                          message: 'Tu contraseña actual no coincide con la ingresada, por favor intentalo de nuevo',
-                          buttons: ['OK']
-                        }).then(alert => alert.present());
+                        this.alert('Cambiar contraseña', 'Contraseña actual incorrecta');
                         return;
                       }
 
                       if (newData.newPassword === data.password) {
-                        await this.alertController.create({
-                          header: 'Cambiar contraseña',
-                          message: 'La nueva contraseña no puede ser igual a la actual, por favor intentalo de nuevo',
-                          buttons: ['OK']
-                        }).then(alert => alert.present());
+                        this.alert('Cambiar contraseña', 'La nueva contraseña no puede ser igual a la actual');
                         return;
                       }
 
-                      const passwordPattern = /^(?=.*\d)(?=.*[A-Z])(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
+                      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.\-#*])[A-Za-z\d.\-#*]+$/;
 
                       if (!passwordPattern.test(newData.newPassword) || /\s/.test(newData.newPassword)) {
-                      await this.alertController.create({
-                        header: 'Cambiar contraseña',
-                        message: 'Tu contraseña nueva debe tener al menos 8 caracteres, una mayúscula, un número, un carácter especial y no debe contener espacios.',
-                        buttons: ['OK']
-                      }).then(alert => alert.present());
+                        this.alert('Cambiar contraseña', 'La contraseña como minimo debe tener una miniscula, una mayúscula, un número y un carácter especial.');
                       return;
                       }
 
                       try {
                         await this.firebaseService.updatePassword(newData.newPassword);
-                        await this.toastController.create({
-                          message: 'Contraseña cambiada exitosamente',
-                          duration: 2000,
-                          icon: 'key-outline',
-                          color: 'dark',
-                          positionAnchor: 'version',
-                          mode: 'ios'
-                        }).then(toast => toast.present());
+                        this.alert('Cambiar contraseña', 'Contraseña actualizada exitosamente');
                       } catch (error) {
-                        await this.alertController.create({
-                          header: 'Cambiar contraseña',
-                          message: 'Hubo un error al cambiar tu contraseña, por favor intenta de nuevo o pide ayuda en soporte',
-                          buttons: ['OK']
-                        }).then(alert => alert.present());
+                        this.alert('Cambiar contraseña', 'Hubo un error al cambiar tu contraseña, por favor intenta de nuevo o pide ayuda en soporte');
                       }
                     }
                   }
@@ -235,11 +205,7 @@ export class SettingsPage implements OnInit {
 
               await newPasswordAlert.present();
             } catch (error) {
-              await this.alertController.create({
-                header: 'Autenficación fallida',
-                message: 'Correo electrónico o contraseña incorrectos',
-                buttons: ['OK']
-              }).then(alert => alert.present());
+              this.alert('Autenticación', 'Ha ocurrido un error al autenticar tu cuenta, por favor intenta de nuevo.');
             }
           }
         }
@@ -249,6 +215,7 @@ export class SettingsPage implements OnInit {
     await alert.present();
   }
 
+  /********** send email to developer for help **********/
   async supportRequests() {
     this.alertController.create({
       header: '¿Necesitas ayuda?',
@@ -257,7 +224,7 @@ export class SettingsPage implements OnInit {
         {
           text: 'Enviar correo',
           handler: () => {
-            window.open('mailto:inventory@gmail.com?subject=Soporte%20de%20Inventario&body=Describe%20tu%20problema%20aquí');
+            window.open('mailto:matiasbaxman@gmail.com?subject=Soporte%20de%20Inventario&body=Describe%20tu%20problema%20aquí');
           }
         },
         {
@@ -268,6 +235,7 @@ export class SettingsPage implements OnInit {
     }).then(alert => alert.present());
   }
 
+  /********** delete account function **********/
   async deleteAccount() {
     const alert = await this.alertController.create({
       header: 'Reautenticación requerida',
@@ -314,11 +282,7 @@ export class SettingsPage implements OnInit {
                     text: 'Aceptar',
                     handler: async (confirmData) => {
                       if (confirmData.confirmation !== 'borrar cuenta') {
-                        await this.alertController.create({
-                          header: 'Error',
-                          message: 'Debes escribir "borrar cuenta" para confirmar la eliminación.',
-                          buttons: ['OK']
-                        }).then(alert => alert.present());
+                        this.alert('Eliminar cuenta', 'Por favor, escribe "borrar cuenta" para confirmar.');
                         return;
                       }
                       try {
@@ -326,19 +290,9 @@ export class SettingsPage implements OnInit {
                         await this.storage.remove('user');
                         await this.storage.set('sessionID', false);
                         await this.router.navigate(['/login']);
-                        await this.toastController.create({
-                          message: 'Cuenta eliminada exitosamente, lamentamos verte ir',
-                          duration: 4000,
-                          icon: 'trash-outline',
-                          color: 'dark',
-                          mode: 'ios'
-                        }).then(toast => toast.present());
+                        this.alert('Eliminar cuenta', 'Cuenta eliminada exitosamente.');
                       } catch (error) {
-                        await this.alertController.create({
-                          header: 'Error',
-                          message: 'Error al eliminar la cuenta',
-                          buttons: ['OK']
-                        }).then(alert => alert.present());
+                        this.alert('Eliminar cuenta', 'Ha ocurrido un error al eliminar tu cuenta, por favor intenta de nuevo.');
                       }
                     }
                   }
@@ -347,11 +301,7 @@ export class SettingsPage implements OnInit {
 
               await confirmAlert.present();
             } catch (error) {
-              await this.alertController.create({
-                header: 'Autenticación fallida',
-                message: 'Correo electrónico o contraseña incorrectos',
-                buttons: ['OK']
-              }).then(alert => alert.present());
+              this.alert('Autenticación', 'Ha ocurrido un error al autenticar tu cuenta, por favor intenta de nuevo.');
             }
           }
         }
@@ -361,6 +311,7 @@ export class SettingsPage implements OnInit {
     await alert.present();
   }
 
+  /********** logout function **********/
   async logout() {
     this.alertController.create({
       header: 'Cerrar sesión',
@@ -373,13 +324,7 @@ export class SettingsPage implements OnInit {
         {
           text: 'Aceptar',
           handler: () => {
-            this.toastController.create({
-              message: 'Sesión cerrada exitosamente',
-              duration: 2000,
-              icon: 'log-out',
-              color: 'dark',
-              mode: 'ios'
-            }).then(toast => toast.present());
+            this.alert('Cerrar sesión', 'Sesión cerrada exitosamente.');
             this.firebaseService.logout();
             this.storage.set('sessionID', false);
             this.storage.remove('user');

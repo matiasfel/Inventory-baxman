@@ -8,10 +8,6 @@ const routes: Routes = [
     component: DashboardPage,
     children: [
       {
-        path: 'inventory',
-        loadChildren: () => import('../inventory/inventory.module').then(m => m.InventoryPageModule)
-      },
-      {
         path: 'furnitures',
         loadChildren: () => import('../furnitures/furnitures.module').then(m => m.FurnituresPageModule)
       },
@@ -21,7 +17,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'inventory',
+        redirectTo: 'furnitures',
         pathMatch: 'full'
       }
     ]

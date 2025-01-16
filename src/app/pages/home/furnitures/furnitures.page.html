@@ -1,9 +1,5 @@
 <ion-content [fullscreen]="true">
 
-  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" mode="ios">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-
   <div class="search">
     <h1>Muebles</h1>
     <ion-searchbar 
@@ -11,7 +7,8 @@
       placeholder="Buscar"
       [(ngModel)]="searchQuery"
       (ionInput)="filterFurnitures()"
-      maxlength="50">
+      maxlength="50"
+      animated="true">
     </ion-searchbar>
   </div>
 
@@ -45,10 +42,6 @@
                 <p *ngIf="furniture.description.length === 0" id="description">No existe una descripción para este mueble, agrega una.</p>
 
                 <div class="buttons">
-                  <button (click)="editFurniture()">
-                    <p>Editar</p>
-                    <ion-icon name="create"></ion-icon>
-                  </button>
                   <button (click)="deleteFurniture(furniture)">
                     <p>Eliminar</p>
                     <ion-icon name="trash"></ion-icon>
@@ -108,7 +101,6 @@
               name="name"
               [(ngModel)]="name">
             </ion-input>
-            <p>Opcional</p>
 
             <ion-textarea 
               mode="md"

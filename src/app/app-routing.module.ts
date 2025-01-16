@@ -25,10 +25,6 @@ const routes: Routes = [
     component: TabsComponent,
     children: [
       {
-        path: 'inventory',
-        loadChildren: () => import('./pages/home/inventory/inventory.module').then(m => m.InventoryPageModule)
-      },
-      {
         path: 'furnitures',
         loadChildren: () => import('./pages/home/furnitures/furnitures.module').then(m => m.FurnituresPageModule)
       },
@@ -38,7 +34,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'inventory',
+        redirectTo: 'furnitures',
         pathMatch: 'full'
       }
     ]

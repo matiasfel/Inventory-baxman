@@ -254,15 +254,16 @@ export class FurnitureDetailComponent {
 
   totalValue: number = 0;
 
-  ngOnInit() {
-    this.totalValue = this.furniture.costs.reduce((acc: number, cost: { value: number }) => acc + cost.value, 0);
-  }
-
+  
   constructor(
     private modalController: ModalController,
     private toastController: ToastController,
     private alertController: AlertController
   ) {}
+  
+  ngOnInit() {
+    this.totalValue = this.furniture.costs.reduce((acc: number, cost: { value: number }) => acc + cost.value, 0);
+  }
 
   async exportSucces(exportMode: string) {
     const toast = await this.toastController.create({

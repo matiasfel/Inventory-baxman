@@ -1,10 +1,8 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { CloudinaryService } from 'src/app/services/cloudinary/cloudinary.service';
-import { Storage } from '@ionic/storage-angular';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Network } from '@capacitor/network';
 import { FurnitureDetailComponent } from 'src/app/components/app-furniture-detail/app-furniture-detail.component';
 
 @Component({
@@ -30,39 +28,12 @@ export class FurnituresPage implements OnInit {
     private auth: AngularFireAuth
   ) {}
 
-  /* 
-
-    frontImg:
-  name:
-  description: 
-  costs: [
-    {
-      name:
-      value:
-    }
-  ]
-
-  cuts: [
-    {
-      extent:
-      name:
-    }
-  ]
-
-  accessories: [
-    {
-      name:
-      quantity:
-    }
-
-  */
-
+  /********** Load all furnitures from firestore and save in furnitures array **********/
   ngOnInit() {
     this.loadFurnitures();
     this.filterFurnitures();
   }
 
-  /********** Load all furnitures from firestore and save in furnitures array **********/
   furnitures: any[] = [];
 
   loadFurnitures() {
@@ -80,34 +51,24 @@ export class FurnituresPage implements OnInit {
     });
   }
 
-  /********** Refresh all content in the view **********/
+  /********** Toast and Alert functions **********/
+  async alert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
 
-  async handleRefresh(event: CustomEvent) {
-    const status = await Network.getStatus();
-    if (!status.connected) {
-      this.alertController.create({
-        header: 'Muebles',
-        message: 'Debes conectarte a internet para actualizar esta pestaña.',
-        buttons: ['OK']
-      }).then((alert) => {
-        alert.present();
-      });
-      (event.target as HTMLIonRefresherElement).complete();
-      return;
-    }
-
-    setTimeout(() => {
-      this.loadFurnitures();
-      this.filterFurnitures();
-      this.alertController.create({
-        header: 'Actualización exitosa',
-        message: 'Se han actualizado los muebles correctamente.',
-        buttons: ['OK']
-      }).then((alert) => {
-        alert.present();
-      });
-      (event.target as HTMLIonRefresherElement).complete();
-    }, 2000);
+  async toast(message: string, icon: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      mode: 'ios',
+      duration: 2000,
+      icon: icon
+    });
+    await toast.present();
   }
 
   /********** Upload images functions **********/
@@ -166,22 +127,9 @@ export class FurnituresPage implements OnInit {
           url: uploadResult.secure_url,
           createdAt: new Date(),
         });
-  
-        const toast = await this.toastController.create({
-          message: 'Imagen subida correctamente.',
-          duration: 2000,
-          color: 'success',
-        });
-        toast.present();
       } catch (error) {
         console.error('Error al subir la imagen:', error);
-  
-        const toast = await this.toastController.create({
-          message: 'Error al subir la imagen. Por favor, intenta nuevamente.',
-          duration: 2000,
-          color: 'danger',
-        });
-        toast.present();
+        this.alert('Subir imagen', 'Ha ocurrido un error al intentar subir la imagen. Por favor, intenta nuevamente.');
       }
     }
   }  
@@ -206,12 +154,7 @@ export class FurnituresPage implements OnInit {
         reader.readAsDataURL(webpFile);
       } catch (error) {
         console.error('Error al convertir la imagen a WebP:', error);
-        this.toastController.create({
-          message: 'Error al procesar la imagen.',
-          duration: 2000,
-          position: 'bottom',
-          color: 'danger',
-        }).then((toast) => toast.present());
+        this.alert('Subir foto', 'Ha ocurrido un error al intentar subir la imagen. Por favor, intenta nuevamente.');
       }
     }
   }
@@ -232,71 +175,58 @@ export class FurnituresPage implements OnInit {
   searchQuery = '';
   filteredFurnitures: any[] = [];
 
-  // logic to edit a furniture | NOT CHECKED ✓
-  editFurniture(){
-    console.log('Furniture edited');
-  }
-
-// logic to delete a furniture | CHECKED ✓
-async deleteFurniture(furniture: any) {
-  const alert = await this.alertController.create({
-    header: 'Confirma la eliminación',
-    message: `¿Estás seguro de que deseas eliminar el mueble "${furniture.name}"?`,
-    buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
-      },
-      {
-        text: 'Eliminar',
-        handler: async () => {
-          const user = this.auth.currentUser;
-          if (!user) {
-            console.error('No user is logged in');
-            return;
-          }
-
-          const docId = this.cleanNameForFirestoreId(furniture.name);
-
-          try {
-
-            const resolvedUser = await user;
-            if (!resolvedUser) {
+  // logic to delete a furniture | CHECKED ✓
+  async deleteFurniture(furniture: any) {
+    const alert = await this.alertController.create({
+      header: 'Confirma la eliminación',
+      message: `¿Estás seguro de que deseas eliminar el mueble "${furniture.name}"?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          handler: async () => {
+            const user = this.auth.currentUser;
+            if (!user) {
               console.error('No user is logged in');
               return;
             }
 
-            const collectionRef = this.firestore.collection(`users/${resolvedUser.uid}/furnitures`);
+            const docId = this.cleanNameForFirestoreId(furniture.name);
 
-            await collectionRef.doc(docId).delete();
+            try {
 
-            const toast = await this.toastController.create({
-              message: `El mueble "${furniture.name}" ha sido eliminado correctamente.`,
-              mode: 'ios',
-              icon: 'trash',
-              color: 'dark',
-              positionAnchor: 'version',
-              duration: 2000,
-            });
-            toast.present();
-            console.log(`Furniture with ID: ${docId} deleted successfully.`);
-            this.loadFurnitures();
-          } catch (error) {
-            const alert = await this.alertController.create({
-              header: 'Eliminar mueble',
-              message: `Ha ocurrido un error al intentar eliminar el mueble "${furniture.name}". Comprueba tu conexión a Internet y vuelve a intentarlo.`,
-              buttons: ['OK'],
-            });
-            alert.present();
-            console.error('Error deleting furniture or images:', error);
-          }
+              const resolvedUser = await user;
+              if (!resolvedUser) {
+                console.error('No user is logged in');
+                return;
+              }
+
+              const collectionRef = this.firestore.collection(`users/${resolvedUser.uid}/furnitures`);
+              await collectionRef.doc(docId).delete();
+
+              // delete photos from Cloudinary
+              for (const photo of furniture.photos) {
+                console.log('Deleting photo:', photo);
+                const publicId = photo.split('/').slice(-3).join('/').split('.')[0];
+                await this.cloudinaryService.deleteImage(publicId);
+              }
+
+              this.alert("Eliminar mueble", `El mueble "${furniture.name}" ha sido eliminado correctamente.`);
+              this.loadFurnitures();
+            } catch (error) {
+              this.alert("Eliminar mueble", `Ha ocurrido un error al intentar eliminar el mueble "${furniture.name}". Por favor, intentalo nuevamente.`);
+              alert.present();
+              console.error('Error deleting furniture or images:', error);
+            }
+          },
         },
-      },
-    ],
-  });
-
-  await alert.present();
-}
+      ],
+    });
+    await alert.present();
+  }
 
   // logic to view the furniture details | CHECKED ✓
   selectedFurniture: any;
@@ -328,13 +258,7 @@ async deleteFurniture(furniture: any) {
     }
 
     if (this.photos.length === 0) {
-      this.alertController.create({
-        header: 'Fotos requeridas',
-        message: 'Debes agregar al menos una foto para crear el mueble.',
-        buttons: ['OK']
-      }).then((alert) => {
-        alert.present();
-      });
+      this.alert("Fotos requeridas", "Debes subir al menos una foto del mueble.");
       return;
     }
 
@@ -349,13 +273,7 @@ async deleteFurniture(furniture: any) {
     };
 
     if (!furniture.name) {
-      this.alertController.create({
-        header: 'Nombre requerido',
-        message: 'Debes ingresar un nombre para el mueble.',
-        buttons: ['OK']
-      }).then((alert) => {
-        alert.present();
-      });
+      this.alert("Nombre requerido", "Debes ingresar un nombre para el mueble.");
       return;
     }
 
@@ -363,7 +281,7 @@ async deleteFurniture(furniture: any) {
 
     // Mostrar loading
     const loading = await this.loadingController.create({
-      message: 'Subiendo las fotos y guardando el mueble...',
+      message: 'Guardando el mueble...',
       spinner: 'crescent'
     });
     await loading.present();
@@ -382,13 +300,9 @@ async deleteFurniture(furniture: any) {
 
         if (docSnapshot && docSnapshot.exists) {
           console.log(`Furniture with name ${furniture.name} already exists.`);
-          this.alertController.create({
-            header: 'Mueble existente',
-            message: `El mueble "${furniture.name}" ya existe, por favor ingresa un nombre diferente.`,
-            buttons: ['OK']
-          }).then((alert) => {
-            alert.present();
-          });
+
+          this.alert("Mueble existente", `El mueble "${furniture.name}" ya existe. Por favor, ingresa un nombre diferente.`);
+
           await loading.dismiss();
           return;
         }
@@ -411,16 +325,7 @@ async deleteFurniture(furniture: any) {
         // Guardar mueble en Firestore
         await collectionRef.doc(docId).set(furniture);
 
-        this.toastController.create({
-          message: `El mueble "${furniture.name}" ha sido agregado correctamente.`,
-          mode: 'ios',
-          icon: 'checkmark',
-          color: 'dark',
-          positionAnchor: 'version',
-          duration: 2000
-        }).then((toast) => {
-          toast.present();
-        });
+        this.alert("Mueble guardado", `El mueble "${furniture.name}" ha sido guardado correctamente.`);
 
         // Limpiar formulario
         this.name = '';
@@ -435,6 +340,7 @@ async deleteFurniture(furniture: any) {
 
         console.log(`Furniture added with ID: ${docId} under user ${resolvedUser.uid}`);
       } catch (error) {
+        this.alert("Error al agregar mueble", `Ha ocurrido un error al intentar agregar el mueble "${furniture.name}". Por favor, intentalo nuevamente.`);
         console.error('Error al agregar el mueble:', error);
       } finally {
         // Ocultar loading
