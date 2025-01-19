@@ -18,102 +18,52 @@ $light-color      :  #f6f8fc;
     box-sizing: border-box;
 }
 
-// Top section
+//container 
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+
+    margin: 0 auto;
+}
 
 .top {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
-}
-
-.top ion-avatar {
-    width: 90px;
-    height: 90px;
+    margin-bottom: 20px;
+    background-color: #f2f2f2;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 15px;
 }
 
 .top div {
-    text-align: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #0054e9;
 }
 
-.top div p:nth-child(1) {
-    font-size: 20px;
+.top div h1 {
     font-weight: bold;
-    margin-bottom: 3px;
+    font-size: 22px;
 }
 
-.top div p:nth-child(2) {
-    font-size: 15px;
-    color: gray;
+.top div ion-icon {
+    font-size: 30px;
 }
 
-.top button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
-    color: #fff;
-    gap: 5px;
-
-    background-color: black;
-    padding: 10px 15px;
-    border-radius: 50px;
-
-    transition: scale 0.5s ease;
-}
-
-.top button:active {
-    scale: 0.9;
-}
-
-// modal top container
-
-.modalContainer form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    width: 100%;
-    height: auto;
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    transition: all 0.5s ease;
-}
-
-@media screen and (max-width: 450px) {
-    .modalContainer form {
-        margin-top: 20px;
-        position: absolute;
-        top: 0%;
-        left: 0%;
-        transform: translate(0%, 0%);
-    }
-    
-}
-
-.modalContainer form ion-input {
-    text-align: start;
-    margin: 0 auto;
-    width: 90%;
-    max-width: 400px;
-    margin-bottom: 20px;
-
-    --highlight-color-focused: #000000;
-    --highlight-color-valid: #000000;
-}
-
-.modalContainer form ion-button {
-    width: 90%;
-    max-width: 400px;
-    margin-bottom: 20px;
+.top #justify {
+    text-align: justify;
 }
 
 // Options section 
@@ -121,10 +71,9 @@ $light-color      :  #f6f8fc;
 .optionsSection {
     display: flex;
     flex-direction: column;
+    margin: 0 auto;
 
-    margin: 50px auto;
-
-    width: 90%;
+    width: 100%;
     height: auto;
     max-width: 400px;
 }
@@ -229,16 +178,3 @@ $light-color      :  #f6f8fc;
   .termsModal ul li {
     margin: 5px 0;
   }
-
-#version {
-    font-family: monospace;
-    text-align: center;
-    color: $subtitle-color;
-    padding-top: 45px;
-
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 0;
-    z-index: 3;
-}

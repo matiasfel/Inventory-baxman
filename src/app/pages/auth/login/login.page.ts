@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { TermsModalComponent } from 'src/app/components/terms-modal/terms-modal.component';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   standalone: false,
@@ -26,6 +27,7 @@ export class LoginPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private firebaseService: FirebaseService,
+    private firestore: AngularFirestore,
     private modalController: ModalController,
     private storage: Storage,
     private router: Router
@@ -41,6 +43,7 @@ export class LoginPage implements OnInit {
     const alert = await this.alertController.create({
       header: header,
       message: message,
+      mode: 'ios',
       buttons: ['OK']
     });
     await alert.present();
@@ -96,7 +99,10 @@ export class LoginPage implements OnInit {
           email: res.user.email,
           displayName: res.user.displayName,
         };
-  
+
+        const lastLogin = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' });
+        this.firestore.collection('users').doc(user.uid).update({ lastLogin: lastLogin });
+
         this.storage.set('user', user);
         this.storage.set('sessionID', true);
         this.router.navigate(['/dashboard']);
@@ -154,7 +160,7 @@ export class LoginPage implements OnInit {
         this.firebaseService.register(this.regEmail, this.regPassword).then(async (r) => {
         this.toggleContainers();
 
-        this.toast('Registro exitoso', 'person-add');
+        this.alert('Registro', 'Registro exitoso, inicia sesión para continuar.');
         console.log('register successful');
       }).catch((error) => {
         // Handle Errors here.
@@ -286,6 +292,44 @@ export class LoginPage implements OnInit {
     } 
 
     input.value = value;
+  }
+
+  /********** Restore pass **********/
+
+  restorePass() {
+    this.alertController.create({
+      header: 'Restablecer contraseña',
+      message: 'Ingresa el correo electrónico asociado a tu cuenta para enviarte un enlace de restablecimiento de contraseña.',
+      mode: 'ios',
+      inputs: [
+        {
+          name: 'email',
+          type: 'email',
+          placeholder: 'Correo electrónico',
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Enviar',
+          handler: (data) => {
+            if (data.email) {
+              this.firebaseService.resetPassword(data.email).then(() => {
+                this.alert('Restablecer contraseña', `Se ha enviado un enlace de restablecimiento de contraseña a ${data.email}.`);
+              }).catch((error: any) => {
+                this.alert('Restablecer contraseña', 'Hubo un error al enviar el enlace de restablecimiento de contraseña.');
+                console.error("Error al restablecer contraseña:", error);
+              });
+            } else {
+              this.alert('Restablecer contraseña', 'Debes ingresar un correo electrónico.');
+            }
+          }
+        }
+      ]
+    }).then(alert => alert.present());
   }
 
 }

@@ -1,77 +1,98 @@
-<ion-content [fullscreen]="true">
-
-  <div class="search">
-    <h1>Muebles</h1>
-    <ion-searchbar 
+<ion-header mode="ios" [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Muebles</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      search-icon="search-sharp" 
       mode="ios"
       placeholder="Buscar"
       [(ngModel)]="searchQuery"
       (ionInput)="filterFurnitures()"
       maxlength="50"
-      animated="true">
+    >
     </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-refresher 
+    slot="fixed" 
+    (ionRefresh)="handleRefresh($event)"
+    mode="ios"
+  >
+    <ion-refresher-content
+      pullingIcon="arrow-down"
+      refreshingSpinner="circular"
+    >
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div id="notInternet" *ngIf="!isOnline">
+    <ion-icon name="cloud-offline-sharp"></ion-icon>
+    <p>Se ha detectado que no tienes conexión a internet, conectate para utilizar la aplicación de manera correcta.</p>
   </div>
 
-  <div id="separator">
-  </div>
-
-  <div id="filteredFurnitures" *ngIf="filteredFurnitures.length === 0 && searchQuery">
-    <p>No se han encontrado muebles con el nombre de: "{{ searchQuery }}"</p>
-  </div>
-
-  <div id="nonFurnitures" *ngIf="furnitures.length === 0 && !searchQuery">
-    <p>No tienes ningun mueble agregado.</p>
-  </div>
-
-  <section class="cards">
-
-    <div class="card" *ngFor="let furniture of filteredFurnitures">
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12">
-            <ion-card mode="ios">
-              <img [src]="furniture.frontImg" alt="">
-              <ion-card-header>
-                <ion-card-title>
-                  <h1>{{ furniture.name }}</h1>
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content>
-
-                <p *ngIf="furniture.description.length > 0" id="description">{{ furniture.description }}</p>
-                <p *ngIf="furniture.description.length === 0" id="description">No existe una descripción para este mueble, agrega una.</p>
-
-                <div class="buttons">
-                  <button (click)="deleteFurniture(furniture)">
-                    <p>Eliminar</p>
-                    <ion-icon name="trash"></ion-icon>
-                  </button>
-                  <button (click)="viewFurniture(furniture)">
-                    <p>Visualizar</p>
-                    <ion-icon name="eye"></ion-icon>
-                  </button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+  <div *ngIf="isOnline">
+    <div id="notFounds" *ngIf="filteredFurnitures.length === 0 && searchQuery">
+      <p>No se han encontrado coincidencias con: "{{ searchQuery }}"</p>
     </div>
 
-    <div id="separator2">
+    <div id="nonFurnitures" *ngIf="furnitures.length === 0 && !searchQuery">
+      <p>No tienes ningun mueble agregado.</p>
     </div>
-  
-  </section>
+
+    <div id="founds" *ngIf="filteredFurnitures.length > 0 && searchQuery ">
+      <p>Se han encontrado {{ filteredFurnitures.length }} muebles</p>
+    </div>
+
+    <section class="cards">
+      <div class="card" *ngFor="let furniture of filteredFurnitures">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-card mode="ios">
+                <img [src]="furniture.frontImg" alt="">
+                <ion-card-header>
+                  <ion-card-title>
+                    <h1>{{ furniture.name }}</h1>
+                  </ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <p *ngIf="furniture.description.length > 0" id="description">{{ furniture.description }}</p>
+                  <p *ngIf="furniture.description.length === 0" style="display: none;"></p>
+                  <div class="buttons">
+                    <button (click)="deleteFurniture(furniture)">
+                      <p>Eliminar</p>
+                      <ion-icon name="trash"></ion-icon>
+                    </button>
+                    <button (click)="viewFurniture(furniture)">
+                      <p>Visualizar</p>
+                      <ion-icon name="eye"></ion-icon>
+                    </button>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </section>
+  </div>
+
+  <div id="separator2">
+  </div>
 
   <section class="fabButton">
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button id="addFurniture">
+      <ion-fab-button id="addFurniture" color="secondary">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
   </section>
 
-  <ion-modal trigger="addFurniture" mode="ios">
+  <ion-modal trigger="addFurniture" mode="ios" backdropDismiss="false">
     <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -89,9 +110,13 @@
       <div class="addFurniture">
 
         <section class="basicDetails">
-          <h1>Detalles basicos</h1>
 
-          <div>
+          <div class="title">
+            <h1>Detalles basicos</h1>
+            <ion-icon name="document"></ion-icon>
+          </div>
+
+          <div class="inputs">
             <ion-input 
               mode="md"
               label="Nombre"
@@ -119,7 +144,10 @@
         </section>
 
         <section class="photo">
-          <h1>Fotografías</h1>
+          <div class="title">
+            <h1>Fotografías</h1>
+            <ion-icon name="images"></ion-icon>
+          </div>
         
           <div class="photoContainer">
             <div class="photoCard" *ngFor="let photo of photos; let i = index">
@@ -143,7 +171,10 @@
         </section>        
 
         <section class="avancedDetails">
-          <h1>Detalles avanzados</h1>
+          <div class="title">
+            <h1>Detalles avanzados</h1>
+            <ion-icon name="document-lock"></ion-icon>
+          </div>
 
           <div 
             class="divisor"
@@ -182,7 +213,8 @@
               class="customButton" 
               (click)="addCost()" 
               [ngStyle]="{
-                'background-color': costs.length > 0 ? '#4CAF50' : '#2772b0'
+                'background-color': costs.length > 0 ? '#4CAF50' : '#2772b0',
+                'border-radius': costs.length > 0 ? '0' : '15px'
                 }"
             >
               <p *ngIf="costs.length === 0">Agregar costos</p>
@@ -228,7 +260,8 @@
               class="customButton" 
               (click)="addCut()" 
               [ngStyle]="{
-                'background-color': cuts.length > 0 ? '#4CAF50' : '#2772b0'
+                'background-color': cuts.length > 0 ? '#4CAF50' : '#2772b0',
+                'border-radius': cuts.length > 0 ? '0' : '15px'
                 }"
             >
               <p *ngIf="cuts.length === 0">Agregar cortes</p>
@@ -273,19 +306,14 @@
               class="customButton" 
               (click)="addAccessory()" 
               [ngStyle]="{
-                'background-color': accessories.length > 0 ? '#4CAF50' : '#2772b0'
+                'background-color': accessories.length > 0 ? '#4CAF50' : '#2772b0',
+                'border-radius': accessories.length > 0 ? '0' : '15px'
                 }"
             >
               <p *ngIf="accessories.length === 0">Agregar accesorios</p>
               <p *ngIf="accessories.length > 0">Agregar item</p>
             </button>
           </div>
-
-          <ion-loading
-            #loading
-            message="Subiendo las fotos y guardando el mueble..."
-            spinner="crescent">
-          </ion-loading>
         
         </section>
 
@@ -294,9 +322,5 @@
     </ion-content>
     </ng-template>
   </ion-modal>
-
-  <div id="version">
-    <p></p>
-  </div>
 
 </ion-content>

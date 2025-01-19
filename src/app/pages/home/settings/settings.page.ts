@@ -16,9 +16,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 export class SettingsPage implements OnInit {
 
   displayName!: string;
-  email!: string;
   uid!: string;
-  newDisplayName: string = '';
 
   constructor(
     private toastController: ToastController,
@@ -33,7 +31,6 @@ export class SettingsPage implements OnInit {
   /********** all functions on the start the page  **********/
   async ngOnInit() {
     await this.loadUser();
-    this.newDisplayName = this.displayName;
   }
 
   async ionViewWillEnter() {
@@ -45,12 +42,10 @@ export class SettingsPage implements OnInit {
     const user = await this.storage.get('user');
     if (user) {
       this.displayName = user.displayName;
-      this.email = user.email;
       this.uid = user.uid;
     } else {
-      this.displayName = 'Unkown';
-      this.email = 'Unkown';
-      this.uid = 'Unkown';
+      this.displayName = 'No tiene nombre';
+      this.uid = 'No tiene UID';
     }
   }
 
@@ -59,7 +54,8 @@ export class SettingsPage implements OnInit {
     const alert = await this.alertController.create({
       header: header,
       message: message,
-      buttons: ['OK']
+      buttons: ['OK'],
+      mode: 'ios'
     });
     await alert.present();
   }
@@ -78,36 +74,8 @@ export class SettingsPage implements OnInit {
   async dismissModal() {
     try {
       await this.modalController.dismiss();
-      console.log('Modal dismissed');
-      this.newDisplayName = this.displayName;
     } catch (error) {
-      console.error('Error dismissing modal:', error);
-    }
-  }
-
-  /********** save changes function **********/
-  async saveChanges(){
-
-    if (this.newDisplayName === '') {
-      this.alert('Editar perfil', 'El nombre no puede estar vacío');
-    } else if (/[@.,;{}[\]]/.test(this.newDisplayName)) {
-      this.alert('Editar perfil', 'El nombre no puede contener caracteres especiales');
-    } else {
-      
-      await this.firebaseService.updateName(this.newDisplayName);
-      await this.firestore.collection('users').doc(this.uid).update({
-        displayName: this.newDisplayName,
-      });
-
-      await this.storage.set('user', {
-        displayName: this.newDisplayName,
-        email: this.email,
-        uid: this.uid
-      });
-
-      this.displayName = this.newDisplayName;
-      this.dismissModal();
-      this.alert('Editar perfil', 'Nombre actualizado exitosamente');
+      console.error(error);
     }
   }
 
@@ -117,7 +85,7 @@ export class SettingsPage implements OnInit {
     if (button) {
       button.disabled = true;
       navigator.clipboard.writeText(this.uid);
-      this.toast('UID copiado al portapapeles', 'copy-outline');
+      this.alert('Copiar UID', 'UID copiado al portapapeles.');
       setTimeout(() => {
         button.disabled = false;
       }, 3000);
@@ -129,6 +97,7 @@ export class SettingsPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Reautenticación requerida',
       message: 'Para cambiar tu contraseña, por favor ingresa tu correo electrónico y contraseña actual',
+      mode: 'ios',
       inputs: [
         {
           name: 'email',
@@ -154,6 +123,7 @@ export class SettingsPage implements OnInit {
               const newPasswordAlert = await this.alertController.create({
                 header: 'Cambiar contraseña',
                 message: 'Ingresa tu nueva contraseña, esta será la nueva contraseña asociada a tu cuenta.',
+                mode: 'ios',
                 inputs: [
                   {
                     name: 'actualPassword',
@@ -220,6 +190,7 @@ export class SettingsPage implements OnInit {
     this.alertController.create({
       header: '¿Necesitas ayuda?',
       message: 'Por favor, mánda un correo a matiasbaxman@gmail.com con tu problema y te respondere lo más pronto posible.',
+      mode: 'ios',
       buttons: [
         {
           text: 'Enviar correo',
@@ -240,6 +211,7 @@ export class SettingsPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Reautenticación requerida',
       message: 'Para eliminar tu cuenta, por favor ingresa tu correo electrónico y contraseña actual.',
+      mode: 'ios',
       inputs: [
         {
           name: 'email',
@@ -266,6 +238,7 @@ export class SettingsPage implements OnInit {
                 header: 'Confirmar eliminación',
                 subHeader: '¿Estás seguro?',
                 message: 'Esta acción no se puede deshacer y se eliminaran todos tus datos de nuestros archivos. Por favor, escribe "borrar cuenta" para confirmar.',
+                mode: 'ios',
                 inputs: [
                   {
                     name: 'confirmation',
@@ -281,10 +254,10 @@ export class SettingsPage implements OnInit {
                   {
                     text: 'Aceptar',
                     handler: async (confirmData) => {
-                      if (confirmData.confirmation !== 'borrar cuenta') {
-                        this.alert('Eliminar cuenta', 'Por favor, escribe "borrar cuenta" para confirmar.');
+                      if (confirmData.confirmation !== 'borrar cuenta' ) {
+                        this.alert('Eliminar cuenta', 'Confirmación incorrecta, por favor intentalo de nuevo.');
                         return;
-                      }
+                      } 
                       try {
                         await this.firebaseService.deleteAccount();
                         await this.storage.remove('user');
@@ -316,6 +289,7 @@ export class SettingsPage implements OnInit {
     this.alertController.create({
       header: 'Cerrar sesión',
       message: '¿Estás seguro de cerrar sesión?',
+      mode: 'ios',
       buttons: [
         {
           text: 'Cancelar',

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController, ToastController } from '@ionic/angular';
 import jsPDF from 'jspdf';
 
 @Component({
@@ -30,22 +30,20 @@ import jsPDF from 'jspdf';
               <ion-icon name="pricetag"></ion-icon>
             </div>
 
-            <p>{{ furniture.name }}</p>
+            <p *ngIf="furniture.description !== '' ">{{ furniture.name }}</p>
+            <p *ngIf="furniture.description === '' " style="padding: 0;">{{ furniture.name }}</p>
 
           </div>
 
           <div class="desc">
 
-            <div class="title">
-              <h2 *ngIf="furniture.description.length > 0" >Descripción del mueble</h2>
-              <ion-icon *ngIf="furniture.description.length > 0"  name="information-circle"></ion-icon>
-
-              <h2 *ngIf="furniture.description === '' " style="color: #c6000e;">Descripción del mueble</h2>
-              <ion-icon *ngIf="furniture.description === '' " name="information-circle" color="danger"></ion-icon>
+            <div class="title" *ngIf="furniture.description !== '' ">
+              <h2>Descripción del mueble</h2>
+              <ion-icon name="information-circle"></ion-icon>
             </div>
 
-            <p>{{ furniture.description }}</p>
-            <p *ngIf="furniture.description === '' ">No existe una descripción para este mueble, agrega una.</p>
+            <p *ngIf="furniture.description !== '' ">{{ furniture.description }}</p>
+
           </div>
         </div>
 
@@ -182,7 +180,7 @@ import jsPDF from 'jspdf';
 
   .viewFurniture .container {
     border-radius: 1rem;
-    background: #f4f4f4;
+    background-color: #f9f9f9;
     padding: 1rem;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   }
@@ -254,45 +252,56 @@ export class FurnitureDetailComponent {
 
   totalValue: number = 0;
 
-  
   constructor(
     private modalController: ModalController,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private actionSheet: ActionSheetController
   ) {}
   
   ngOnInit() {
     this.totalValue = this.furniture.costs.reduce((acc: number, cost: { value: number }) => acc + cost.value, 0);
   }
 
-  async exportSucces(exportMode: string) {
-    const toast = await this.toastController.create({
-      message: `${this.furniture.name} ha sido exportado ${exportMode}`,
-      duration: 2000,
+  /********** Toast and Alert functions **********/
+  async alert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
       mode: 'ios',
-      position: 'bottom',
-      icon: 'download-outline',
-      color: 'dark'
+      buttons: ['OK']
     });
-    toast.present();
+    await alert.present();
+  }
+
+  async toast(message: string, icon: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      mode: 'ios',
+      duration: 2000,
+      color: 'dark',
+      icon: icon
+    });
+    await toast.present();
   }
 
   async export() {
-    const alert = await this.alertController.create({
+    this.actionSheet.create({
       header: 'Exportar detalles',
-      message: '¿Qué tipo de detalles deseas obtener?',
       mode: 'ios',
       buttons: [
         {
-          text: 'Detalles basicos',
+          text: 'Detalles básicos',
           handler: () => {
             this.exportBasicDetails();
+            this.toast('Detalles básicos exportados correctamente.', 'download-outline');
           }
         },
         {
           text: 'Detalles avanzados',
           handler: () => {
             this.exportAvancedDetails();
+            this.toast('Detalles avanzados exportados correctamente.', 'download-outline');
           }
         },
         {
@@ -300,179 +309,167 @@ export class FurnitureDetailComponent {
           role: 'cancel'
         }
       ]
-    });
-
-    await alert.present();
+    }).then(actionSheet => actionSheet.present());
   }
 
   exportBasicDetails() {
-    const basicDetails = {
-      name: this.furniture.name,
-      description: this.furniture.description,
-      frontImg: this.furniture.frontImg
-    };
-  
+    const { name, description, frontImg } = this.furniture;
     const contactInfo = {
       email: 'baxman_c@hotmail.com',
       phone: '+56 9 4010 8716',
-      social: 'instagram.com/mueblesbaxman'
+      social: 'instagram.com/mueblesbaxman',
     };
   
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-  
-    // Título centrado
-    doc.setFontSize(20);
-    doc.text('Detalles Básicos del Mueble', pageWidth / 2, 50, { align: 'center' });
   
     // Agregar logo
-    const logoImg = '/assets/logo.png'; // Asegúrate de reemplazar con tu logo
+    const logoImg = '/assets/logo.png';
     doc.addImage(logoImg, 'PNG', pageWidth / 2 - 15, 10, 30, 30);
+
+    // Título principal
+    doc.setFontSize(20);
+    doc.text('Detalles Avanzados del Mueble', pageWidth / 2, 50, { align: 'center' });
   
-    // Detalles básicos
-    doc.setFontSize(12);
-    const marginLeft = 20;
     let cursorY = 70;
   
-    doc.text(`Nombre:`, marginLeft, cursorY);
+    // Nombre del mueble
     doc.setFontSize(14);
-    doc.text(`${basicDetails.name}`, marginLeft + 30, cursorY);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Nombre:', 20, cursorY);
+    doc.setFont('helvetica', 'normal');
+    doc.text(name || 'N/A', 50, cursorY);
   
     cursorY += 10;
-    doc.setFontSize(12);
-    doc.text(`Descripción:`, marginLeft, cursorY);
-    doc.setFontSize(14);
   
-    // Ajustar descripción a líneas
-    const maxWidth = pageWidth - marginLeft * 2;
-    const descriptionLines = doc.splitTextToSize(basicDetails.description, maxWidth);
-    cursorY += 10;
-    doc.text(descriptionLines, marginLeft, cursorY);
+    // Descripción
+    doc.setFont('helvetica', 'bold');
+    doc.text('Descripción:', 20, cursorY);
+    doc.setFont('helvetica', 'normal');
+    const descriptionLines = doc.splitTextToSize(description || 'No disponible', pageWidth - 40);
+    doc.text(descriptionLines, 20, cursorY + 10);
+    cursorY += 10 + descriptionLines.length * 10;
   
-    // Ajustar el cursor hacia abajo según el alto de la descripción
-    cursorY += descriptionLines.length * 10;
-  
-    // Agregar imagen centrada si está disponible
-    if (basicDetails.frontImg) {
+    // Imagen
+    if (frontImg) {
       const img = new Image();
-      img.src = basicDetails.frontImg;
+      img.src = frontImg;
       img.onload = () => {
         const imgWidth = 100;
         const imgHeight = (img.height * imgWidth) / img.width;
         doc.addImage(img, 'JPEG', pageWidth / 2 - imgWidth / 2, cursorY + 10, imgWidth, imgHeight);
-  
         cursorY += imgHeight + 20;
-  
-        // Llamar función para agregar contacto
+        const pageHeight = doc.internal.pageSize.getHeight();
         this.addContactInfo(doc, contactInfo, pageWidth, pageHeight);
-        doc.save(`BASIC_DETAILS_${this.furniture.name}.pdf`);
-        this.exportSucces('en formato de PDF como detalles básicos');
+        this.savePDF(doc, `BASIC_DETAILS_${name}.pdf`);
       };
     } else {
       cursorY += 20;
-  
-      // Llamar función para agregar contacto
+      const pageHeight = doc.internal.pageSize.getHeight();
       this.addContactInfo(doc, contactInfo, pageWidth, pageHeight);
-      doc.save(`BASIC_DETAILS_${this.furniture.name}.pdf`);
-      this.exportSucces('Detalles Básicos en PDF');
+      this.savePDF(doc, `BASIC_DETAILS_${name}.pdf`);
     }
   }
-
+  
   exportAvancedDetails() {
-    const advancedDetails = {
-      costs: this.furniture.costs,
-      cuts: this.furniture.cuts,
-      accessories: this.furniture.accessories
-    };
-
+    const { costs, cuts, accessories } = this.furniture;
     const contactInfo = {
       email: 'baxman_c@hotmail.com',
       phone: '+56 9 4010 8716',
-      social: 'instagram.com/mueblesbaxman'
+      social: 'instagram.com/mueblesbaxman',
     };
-
+  
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-
-    // Título centrado
-    doc.setFontSize(20);
-    doc.text('Detalles Avanzados del Mueble', pageWidth / 2, 50, { align: 'center' });
-    
+  
     // Agregar logo
-    const logoImg = '/assets/logo.png'; // Asegúrate de reemplazar con tu logo
+    const logoImg = '/assets/logo.png';
     doc.addImage(logoImg, 'PNG', pageWidth / 2 - 15, 10, 30, 30);
 
-
-    // Detalles avanzados
-    doc.setFontSize(12);
-    const marginLeft = 20;
+    // Título principal
+    doc.setFontSize(20);
+    doc.text('Detalles Avanzados del Mueble', pageWidth / 2, 50, { align: 'center' });
+  
     let cursorY = 70;
-
+  
     // Costos
-    doc.text('Costos:', marginLeft, cursorY);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Costos:', 20, cursorY);
     cursorY += 10;
-    advancedDetails.costs.forEach((cost: { name: string; value: number }) => {
-      doc.text(`${cost.name}: ${cost.value}`, marginLeft + 10, cursorY);
+    if (costs.length > 0) {
+      costs.forEach((cost: { name: string; value: number }) => {
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${cost.name}: ${cost.value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`, 30, cursorY);
+        cursorY += 10;
+      });
+    } else {
+      doc.text('No hay costos asociados.', 30, cursorY);
       cursorY += 10;
-    });
+    }
+  
     // Cortes
     cursorY += 10;
-    doc.text('Cortes:', marginLeft, cursorY);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Cortes:', 20, cursorY);
     cursorY += 10;
-    advancedDetails.cuts.forEach((cut: { extent: string, name: string }) => {
-      doc.text(`${cut.extent} = ${cut.name}`, marginLeft + 10, cursorY);
+    if (cuts.length > 0) {
+      cuts.forEach((cut: { extent: string; name: string }) => {
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${cut.extent} = ${cut.name}`, 30, cursorY);
+        cursorY += 10;
+      });
+    } else {
+      doc.text('No hay cortes asociados.', 30, cursorY);
       cursorY += 10;
-    });
-
+    }
+  
     // Accesorios
     cursorY += 10;
-    doc.text('Accesorios:', marginLeft, cursorY);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Accesorios:', 20, cursorY);
     cursorY += 10;
-    advancedDetails.accessories.forEach((accessory: { name: string; quantity: number }) => {
-      doc.text(`${accessory.name}: ${accessory.quantity}`, marginLeft + 10, cursorY);
+    if (accessories.length > 0) {
+      accessories.forEach((accessory: { name: string; quantity: number }) => {
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${accessory.name}: ${accessory.quantity}`, 30, cursorY);
+        cursorY += 10;
+      });
+    } else {
+      doc.text('No hay accesorios asociados.', 30, cursorY);
       cursorY += 10;
-    });
-
-    // Llamar función para agregar contacto
+    }
+  
+    const pageHeight = doc.internal.pageSize.getHeight();
     this.addContactInfo(doc, contactInfo, pageWidth, pageHeight);
-    doc.save(`ADVANCED_DETAILS_${this.furniture.name}.pdf`);
-    this.exportSucces('en formato de PDF como detalles avanzados');
+    this.savePDF(doc, `ADVANCED_DETAILS_${this.furniture.name}.pdf`);
+  }
+
+  savePDF(doc: jsPDF, filename: string) {
+    doc.save(filename);
   }
   
   addContactInfo(doc: jsPDF, contactInfo: any, pageWidth: number, pageHeight: number) {
     const marginBottom = 20;
     const cursorY = pageHeight - marginBottom;
   
+    // Configuración de fuente y estilo
     doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
   
-    // Información de contacto centrada
+    // Dibujar una línea horizontal decorativa
+    doc.line(20, cursorY - 25, pageWidth - 20, cursorY - 25);
+  
+    // Información de contacto centrada en la parte inferior
     doc.text(`Correo: ${contactInfo.email}`, pageWidth / 2, cursorY - 15, { align: 'center' });
     doc.text(`Teléfono: ${contactInfo.phone}`, pageWidth / 2, cursorY - 5, { align: 'center' });
     doc.text(`Redes Sociales: ${contactInfo.social}`, pageWidth / 2, cursorY + 5, { align: 'center' });
-  
-    // Línea decorativa
-    doc.line(20, cursorY - 25, pageWidth - 20, cursorY - 25); // Línea horizontal
   }
+  
 
   copy(event: Event) {
     const target = event.target as HTMLButtonElement;
     const text = target.previousElementSibling?.textContent;
     navigator.clipboard.writeText(text || '');
-    target.disabled = true; // Disable the button
-    this.toastController.create({
-      message: `Texto copiado: ${text}`,
-      duration: 2000,
-      mode: 'ios',
-      position: 'bottom',
-      color: 'dark',
-      icon: 'copy-outline'
-    }).then(toast => toast.present());
-    setTimeout(() => {
-      target.disabled = false; // Re-enable the button after 2 seconds
-    }, 3000);
   }
 
   dismiss() {

@@ -10,41 +10,49 @@
     <section class="loginForm">
       <strong>Inicia sesión</strong>
       <form (submit)="loginForm()">
-        <ion-input 
-          label="Correo electronico" 
-          label-placement="stacked" 
-          color="primary"
-          fill="outline"
-          type="email"
+        <div class="inputs">
+          <ion-input 
+            label="Correo electronico" 
+            label-placement="stacked" 
+            color="primary"
+            fill="outline"
+            type="email"
 
-          autocomplete="email"
+            autocomplete="email"
 
-          mode="md"
+            mode="md"
 
-          color="light"
+            color="light"
 
-          name="email"
-          [(ngModel)]="email"
-        >
-        </ion-input>
+            name="email"
+            [(ngModel)]="email"
+          >
+          </ion-input>
         
-        <ion-input 
-          label="Contraseña" 
-          label-placement="floating" 
-          fill="outline"
-          type="password"
+          <ion-input 
+            label="Contraseña" 
+            label-placement="floating" 
+            fill="outline"
+            type="password"
 
-          autocomplete="current-password"
+            autocomplete="current-password"
 
-          mode="md"
-          
-          color="light"
+            mode="md"
+            
+            color="light"
 
-          name="password"
-          [(ngModel)]="password"
-        >
-          <ion-input-password-toggle slot="end" color="dark" mode="ios" label-placement="floating"></ion-input-password-toggle>
-        </ion-input>
+            name="password"
+            [(ngModel)]="password"
+          >
+            <ion-input-password-toggle slot="end" color="dark" mode="ios" label-placement="floating"></ion-input-password-toggle>
+          </ion-input>
+        </div>
+
+        <div id="restorePass">
+          <a (click)="restorePass()" style="cursor: pointer;">
+            ¿Olvidaste tu contraseña? <br> 
+          </a>
+        </div>
         
         <ion-button 
           type="submit"
@@ -55,10 +63,15 @@
         Iniciar sesión
         </ion-button>
 
-        <a id="haveAccount" (click)="toggleContainers()">
-          ¿No tienes una cuenta? <br> 
-                Regístrate
-        </a>
+        <div class="loginOptions">
+
+          <hr>
+
+          <a id="haveAccount" (click)="toggleContainers()" style="cursor: pointer;">
+            ¿No tienes una cuenta? <br> 
+            <span style="text-decoration: underline;">Regístrate</span>
+          </a>
+        </div>
       </form>
     </section>
 
@@ -104,7 +117,7 @@
           <ion-input-password-toggle slot="end" color="dark" mode="ios" label-placement="floating"></ion-input-password-toggle>
         </ion-input>
 
-        <div>
+        <div style="padding: 10px;">
           <ion-progress-bar [value]="passwordStrength" [color]="passwordStrengthColor">></ion-progress-bar>
           <p *ngIf="passwordStrength < 0.5" style="color: red;">La contraseña es muy débil</p>
           <p *ngIf="passwordStrength >= 0.5 && passwordStrength < 0.8" style="color: orange;">La contraseña es moderada</p>
@@ -120,10 +133,13 @@
         Registrarme
         </ion-button>
 
-        <a id="haveAccount" (click)="toggleContainers()">
-          ¿Ya tienes una cuenta? <br> 
-              Inicia sesión
-        </a>
+        <div class="registerOptions">
+          <hr>
+          <a id="haveAccount" (click)="toggleContainers()">
+            ¿Ya tienes una cuenta? <br> 
+            <span style="text-decoration: underline;">Inicia sesión</span>
+          </a>
+        </div>
       </form>
     </section>
     

@@ -17,7 +17,6 @@ export class DashboardPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    
     this.checkInternetConnection();
     this.storage.create();
   }
@@ -26,8 +25,9 @@ export class DashboardPage implements OnInit {
     const status = await Network.getStatus();
     if (!status.connected) {
       const alert = await this.alertController.create({
-        header: 'Inventory',
+        header: 'Sin conexión',
         message: 'No tienes conexión a internet, por favor revisa tu conexión para utilizar correctamente la aplicación.',
+        mode: 'ios',
         buttons: [
           {
             text: 'OK',

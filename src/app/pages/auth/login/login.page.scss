@@ -61,7 +61,7 @@ $light-color      :  #f6f8fc;
     }
 
     .hero h1 {
-        font-size: 34px;
+        font-size: 2.125rem;
         font-weight: 400;
         letter-spacing: 4px;
         margin-bottom: 50px;
@@ -101,17 +101,9 @@ $light-color      :  #f6f8fc;
         margin: 0 auto;
         width: 100%;
         max-width: 400px;
-        margin-bottom: 30px;
 
         --highlight-color-focused: #8da9c6;
         --highlight-color-valid: #8da9c6;
-    }
-
-    .loginForm #haveAccount {
-        display: block;
-        margin-top: 30px;
-        color: $primary-color;
-        cursor: pointer;
     }
 
     .loginForm ion-button {
@@ -119,7 +111,7 @@ $light-color      :  #f6f8fc;
         margin: 0 auto;
         max-width: 400px;
     }
-
+    
     // Register form
 
     .registerForm {
@@ -170,7 +162,6 @@ $light-color      :  #f6f8fc;
 
     .registerForm #haveAccount {
         display: block;
-        margin-top: 30px;
         color: $primary-color;
         cursor: pointer;
     }
@@ -178,11 +169,50 @@ $light-color      :  #f6f8fc;
     .registerForm div {
         max-width: 400px;
         margin: 0 auto;
-        padding: 10px;
     }
 
     .registerForm ion-button {
         width: 100%;
         margin: 0 auto;
         max-width: 400px;
+    }
+
+    .registerOptions {
+        padding: 0;
+        margin-top: 20px;
+    }
+
+    .registerOptions hr {
+        border: 0;
+        height: 1px;
+        background-color: #e0e0e0;
+        max-width: 400px;
+        margin: 20px auto;
+    }
+
+    .loginOptions {
+        margin-top: 20px;
+    }
+
+    .loginOptions hr {
+        border: 0;
+        height: 1px;
+        background-color: #e0e0e0;
+        max-width: 400px;
+        margin: 20px auto;
+    }
+
+    #restorePass {
+        display: flex;
+        width: 100%;
+        justify-content: start;
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 10px 0;
+    }
+
+    .inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
     }

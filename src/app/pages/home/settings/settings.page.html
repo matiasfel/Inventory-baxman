@@ -1,262 +1,208 @@
+<ion-header mode="ios" [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>  
+
 <ion-content [fullscreen]="true">
 
-  <section class="top">
+  <div class="container">
 
-    <div>
-      <p> {{ displayName }} </p>
-      <p> {{ email }} </p>
-    </div>
+    <section class="top">
 
-    <button id="editProfile">
-      Editar perfil
-      <ion-icon name="create-outline"></ion-icon>
-    </button>
-    
-    <ion-modal trigger="editProfile" mode="ios">
-      <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Editar perfil</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="dismissModal()">Cerrar</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
+      <div>
+        <h1>Hola, {{displayName}}</h1>
+        <ion-icon name="cog"></ion-icon>
+      </div>
 
-        <div class="modalContainer">
+      <p id="justify">
 
-          <form (submit)="saveChanges()">
-
-            <ion-input 
-            label="Nombre de usuario" 
-            label-placement="floating" 
-            fill="outline"
-            mode="md"
-            color="dark"
-            type="text" 
-            [(ngModel)]="newDisplayName"
-            name="newDisplayName"
-            >
-              <ion-icon slot="start" name="person-outline"></ion-icon>
-            </ion-input>
-
-            <ion-input 
-            label="Correo electronico" 
-            label-placement="floating" 
-            fill="outline"
-            mode="md"
-            color="dark"
-            type="text"
-            [(ngModel)]="email"
-            name="newEmail"
-            disabled="true"
-            >
-              <ion-icon slot="start" name="mail-outline"></ion-icon>
-            </ion-input>
-
-            <ion-button 
-            type="submit"
-            expand="block"
-            color="dark"
-            mode="ios"
-            >
-            Guardar cambios
-            </ion-button>
-
-          </form>
-
+        Bienvenido/a a los ajustes de la aplicación. Aquí puedes gestionar tu cuenta y 
+        preferencias. Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos. 
+      </p>
+    </section>
+  
+    <section class="optionsSection">
+  
+      <div class="options">
+        <p> Cuenta </p>
+  
+        <div class="buttons">
+  
+          <button id="copyUID" (click)="copyUID()">
+            <div>
+              <ion-icon name="person-outline" id="insideIcon"></ion-icon>
+              <span> Usuario </span>
+              <span id="uid"> {{ uid }} </span>
+            </div>
+            <ion-icon name="copy" id="outIcon"></ion-icon>
+          </button>
+  
+          <hr>
+          
+          <button (click)="changePassword()">
+            <div>
+              <ion-icon name="key-outline" id="insideIcon"></ion-icon>
+              <span> Cambiar contraseña </span>
+            </div>
+            <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
+          </button>
+          
+          <hr>
+  
+          <button (click)="deleteAccount()">
+            <div>
+              <ion-icon name="trash-outline" id="insideIcon" color="danger" style="background-color: #ffeded;"></ion-icon>
+              <span style="color: #c6000e;"> Eliminar cuenta </span>
+            </div>
+            <ion-icon name="arrow-forward-outline" id="outIcon" color="danger"></ion-icon>
+          </button>
+  
+          <hr>
+  
+          <button (click)="logout()">
+            <div>
+              <ion-icon name="log-out-outline" id="insideIcon" color="danger" style="background-color: #ffeded;"></ion-icon>
+              <span style="color: #c6000e;"> Cerrar sesión </span>
+            </div>
+            <ion-icon name="arrow-forward-outline" id="outIcon" color="danger"></ion-icon>
+          </button>
+  
         </div>
-
-      </ion-content>
-      </ng-template>
-    </ion-modal>
-
-  </section>
-
-  <section class="optionsSection">
-
-    <div class="options">
-      <p> Cuenta </p>
-
-      <div class="buttons">
-
-        <button id="copyUID" (click)="copyUID()">
-          <div>
-            <ion-icon name="person-outline" id="insideIcon"></ion-icon>
-            <span> Usuario </span>
-            <span id="uid"> {{ uid }} </span>
-          </div>
-          <ion-icon name="copy" id="outIcon"></ion-icon>
-        </button>
-
-        <hr>
-        
-        <button (click)="changePassword()">
-          <div>
-            <ion-icon name="key-outline" id="insideIcon"></ion-icon>
-            <span> Cambiar contraseña </span>
-          </div>
-          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
-        </button>
-        
-        <hr>
-
-        <button (click)="deleteAccount()">
-          <div>
-            <ion-icon name="trash-outline" id="insideIcon" color="danger" style="background-color: #ffeded;"></ion-icon>
-            <span style="color: #c6000e;"> Eliminar cuenta </span>
-          </div>
-          <ion-icon name="arrow-forward-outline" id="outIcon" color="danger"></ion-icon>
-        </button>
-
-        <hr>
-
-        <button (click)="logout()">
-          <div>
-            <ion-icon name="log-out-outline" id="insideIcon" color="danger" style="background-color: #ffeded;"></ion-icon>
-            <span style="color: #c6000e;"> Cerrar sesión </span>
-          </div>
-          <ion-icon name="arrow-forward-outline" id="outIcon" color="danger"></ion-icon>
-        </button>
-
+  
       </div>
-
-    </div>
-
-    <div class="options">
-      <p> Preferencias <span style="color: #c6000e; opacity: 0.5;">(Proximamente)</span> </p>
-
-      <div class="buttons">
-
-        <button style="opacity: 0.5;">
-          <div>
-            <ion-icon name="notifications-outline" id="insideIcon"></ion-icon>
-            <span> Notificaciones push</span>
-          </div>
-          <ion-toggle disabled mode="ios" id="outIcon"></ion-toggle>
-        </button>
-
-        <hr>
-
-        <button style="opacity: 0.5;">
-          <div>
-            <ion-icon name="volume-high-outline" id="insideIcon"></ion-icon>
-            <span> Notificaciones con sonido</span>
-          </div>
-          <ion-toggle disabled mode="ios" id="outIcon"></ion-toggle>
-        </button>
-
-
+  
+      <div class="options">
+        <p> Preferencias <span style="color: #c6000e; opacity: 0.5;">(Proximamente)</span> </p>
+  
+        <div class="buttons">
+  
+          <button style="opacity: 0.5;">
+            <div>
+              <ion-icon name="notifications-outline" id="insideIcon"></ion-icon>
+              <span> Notificaciones push</span>
+            </div>
+            <ion-toggle disabled mode="ios" id="outIcon"></ion-toggle>
+          </button>
+  
+          <hr>
+  
+          <button style="opacity: 0.5;">
+            <div>
+              <ion-icon name="volume-high-outline" id="insideIcon"></ion-icon>
+              <span> Notificaciones con sonido</span>
+            </div>
+            <ion-toggle disabled mode="ios" id="outIcon"></ion-toggle>
+          </button>
+  
+  
+        </div>
+  
       </div>
-
-    </div>
-
-    <div class="options">
-      <p> Ayuda y soporte </p>
-
-      <div class="buttons">
-
-        <button id="termsAndConditions">
-          <div>
-            <ion-icon name="document-text-outline" id="insideIcon"></ion-icon>
-            <span> Terminos y condiciones </span>
-          </div>
-          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
-        </button>
-
-        <ion-modal trigger="termsAndConditions" mode="ios">
-          <ng-template>
-          <ion-header>
-            <ion-toolbar>
-            <ion-title>Terminos y condiciones</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="dismissModal()">Cerrar</ion-button>
-            </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-            <ion-content>
-              <div class="termsModal">
-                <h3>1. Introducción</h3>
-                <p>
-                  Bienvenido/a a nuestra aplicación de inventario. Al descargar, instalar y utilizar nuestra aplicación, acepta cumplir con los presentes Términos y Condiciones de Uso. Si no está de acuerdo con estos términos, no debe utilizar la aplicación.
-                </p>
-            
-                <h3>2. Uso de la Aplicación</h3>
-                <p>
-                  <strong>2.1.</strong> La aplicación está diseñada para gestionar inventarios de materiales de construcción y muebles.<br>
-                  <strong>2.2.</strong> Usted es responsable de garantizar que los datos ingresados en la aplicación sean precisos y completos.<br>
-                  <strong>2.3.</strong> No debe utilizar la aplicación para fines ilegales o no autorizados.
-                </p>
-            
-                <h3>3. Registro y Autenticación</h3>
-                <p>
-                  <strong>3.1.</strong> La aplicación utiliza Firebase Authentication para gestionar el acceso de los usuarios. Usted es responsable de mantener la confidencialidad de sus credenciales.<br>
-                  <strong>3.2.</strong> Nos reservamos el derecho de suspender o eliminar cuentas en caso de actividad sospechosa o uso indebido.
-                </p>
-            
-                <h3>4. Almacenamiento de Datos</h3>
-                <p>
-                  <strong>4.1.</strong> Los datos del usuario pueden almacenarse localmente en su dispositivo móvil para facilitar el acceso y el uso offline.<br>
-                  <strong>4.2.</strong> Firebase se utiliza como plataforma para almacenar ciertos datos de la aplicación, incluyendo información de inventario y credenciales de usuario.<br>
-                  <strong>4.3.</strong> Cloudinary se utiliza para almacenar imágenes de productos y perfiles de usuario.<br>
-                  <strong>4.4.</strong> Usted reconoce que aunque implementamos medidas de seguridad razonables, ninguna tecnología es completamente segura y no podemos garantizar la seguridad absoluta de sus datos.
-                </p>
-            
-                <h3>5. Propiedad Intelectual</h3>
-                <p>
-                  <strong>5.1.</strong> Todos los derechos de propiedad intelectual relacionados con la aplicación, incluyendo su diseño, logotipos y código fuente, son propiedad exclusiva de los desarrolladores y de los frameworks utilizados.<br>
-                  <strong>5.2.</strong> Usted no está autorizado/a a copiar, modificar, distribuir o crear obras derivadas de la aplicación sin nuestro consentimiento previo por escrito.
-                </p>
-            
-                <h3>6. Limitación de Responsabilidad</h3>
-                <p>
-                  <strong>6.1.</strong> La aplicación se proporciona "tal cual" y "según disponibilidad". No garantizamos que la aplicación estará libre de errores o interrupciones.<br>
-                  <strong>6.2.</strong> No seremos responsables por pérdidas de datos, daños indirectos, incidentales o consecuentes derivados del uso de la aplicación ya que la aplicación está en una fase de pruebas.
-                </p>
-            
-                <h3>7. Modificaciones a los Términos y Condiciones</h3>
-                <p>
-                  <strong>7.1.</strong> Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento. Los cambios serán notificados a través de la aplicación o por otros medios razonables.<br>
-                  <strong>7.2.</strong> El uso continuo de la aplicación después de dichos cambios constituye su aceptación de los mismos.
-                </p>
-            
-                <h3>8. Contacto</h3>
-                <p>
-                  Si tiene preguntas o inquietudes sobre estos Términos y Condiciones, puede comunicarse con nosotros a través del soporte proporcionado en la aplicación o por nuestro FAQ.
-                </p>
-            
-                <h3>9. Ley Aplicable</h3>
-                <p>
-                  Estos Términos y Condiciones se regirán e interpretarán de acuerdo con las leyes aplicables en su jurisdicción.
-                </p>
-            
-                <p>
-                  Gracias por utilizar nuestra aplicación. Me comprometo a ofrecerle una experiencia segura y eficiente para gestionar sus inventarios.
-                </p>
-              </div>
-            </ion-content>
-          </ng-template>
-        </ion-modal>
-
-        <hr>
-
-        <button (click)="supportRequests()">
-          <div>
-            <ion-icon name="help-buoy-outline" id="insideIcon"></ion-icon>
-            <span> Soporte </span>
-          </div>
-          <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
-        </button>
-
+  
+      <div class="options">
+        <p> Ayuda y soporte </p>
+  
+        <div class="buttons">
+  
+          <button id="termsAndConditions">
+            <div>
+              <ion-icon name="document-text-outline" id="insideIcon"></ion-icon>
+              <span> Terminos y condiciones </span>
+            </div>
+            <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
+          </button>
+  
+          <ion-modal trigger="termsAndConditions" mode="ios">
+            <ng-template>
+            <ion-header>
+              <ion-toolbar>
+                <ion-title>Terminos y condiciones</ion-title>
+                <ion-buttons slot="end">
+                  <ion-button (click)="dismissModal()">Cerrar</ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
+              <ion-content>
+                <div class="termsModal">
+                  <h3>1. Introducción</h3>
+                  <p>
+                    Bienvenido/a a nuestra aplicación de inventario. Al descargar, instalar y utilizar nuestra aplicación, acepta cumplir con los presentes Términos y Condiciones de Uso. Si no está de acuerdo con estos términos, no debe utilizar la aplicación.
+                  </p>
+              
+                  <h3>2. Uso de la Aplicación</h3>
+                  <p>
+                    <strong>2.1.</strong> La aplicación está diseñada para gestionar inventarios de materiales de construcción y muebles.<br>
+                    <strong>2.2.</strong> Usted es responsable de garantizar que los datos ingresados en la aplicación sean precisos y completos.<br>
+                    <strong>2.3.</strong> No debe utilizar la aplicación para fines ilegales o no autorizados.
+                  </p>
+              
+                  <h3>3. Registro y Autenticación</h3>
+                  <p>
+                    <strong>3.1.</strong> La aplicación utiliza Firebase Authentication para gestionar el acceso de los usuarios. Usted es responsable de mantener la confidencialidad de sus credenciales.<br>
+                    <strong>3.2.</strong> Nos reservamos el derecho de suspender o eliminar cuentas en caso de actividad sospechosa o uso indebido.
+                  </p>
+              
+                  <h3>4. Almacenamiento de Datos</h3>
+                  <p>
+                    <strong>4.1.</strong> Los datos del usuario pueden almacenarse localmente en su dispositivo móvil para facilitar el acceso y el uso offline.<br>
+                    <strong>4.2.</strong> Firebase se utiliza como plataforma para almacenar ciertos datos de la aplicación, incluyendo información de inventario y credenciales de usuario.<br>
+                    <strong>4.3.</strong> Cloudinary se utiliza para almacenar imágenes de productos y perfiles de usuario.<br>
+                    <strong>4.4.</strong> Usted reconoce que aunque implementamos medidas de seguridad razonables, ninguna tecnología es completamente segura y no podemos garantizar la seguridad absoluta de sus datos.
+                  </p>
+              
+                  <h3>5. Propiedad Intelectual</h3>
+                  <p>
+                    <strong>5.1.</strong> Todos los derechos de propiedad intelectual relacionados con la aplicación, incluyendo su diseño, logotipos y código fuente, son propiedad exclusiva de los desarrolladores y de los frameworks utilizados.<br>
+                    <strong>5.2.</strong> Usted no está autorizado/a a copiar, modificar, distribuir o crear obras derivadas de la aplicación sin nuestro consentimiento previo por escrito.
+                  </p>
+              
+                  <h3>6. Limitación de Responsabilidad</h3>
+                  <p>
+                    <strong>6.1.</strong> La aplicación se proporciona "tal cual" y "según disponibilidad". No garantizamos que la aplicación estará libre de errores o interrupciones.<br>
+                    <strong>6.2.</strong> No seremos responsables por pérdidas de datos, daños indirectos, incidentales o consecuentes derivados del uso de la aplicación ya que la aplicación está en una fase de pruebas.
+                  </p>
+              
+                  <h3>7. Modificaciones a los Términos y Condiciones</h3>
+                  <p>
+                    <strong>7.1.</strong> Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento. Los cambios serán notificados a través de la aplicación o por otros medios razonables.<br>
+                    <strong>7.2.</strong> El uso continuo de la aplicación después de dichos cambios constituye su aceptación de los mismos.
+                  </p>
+              
+                  <h3>8. Contacto</h3>
+                  <p>
+                    Si tiene preguntas o inquietudes sobre estos Términos y Condiciones, puede comunicarse con nosotros a través del soporte proporcionado en la aplicación o por nuestro FAQ.
+                  </p>
+              
+                  <h3>9. Ley Aplicable</h3>
+                  <p>
+                    Estos Términos y Condiciones se regirán e interpretarán de acuerdo con las leyes aplicables en su jurisdicción.
+                  </p>
+              
+                  <p>
+                    Gracias por utilizar nuestra aplicación. Me comprometo a ofrecerle una experiencia segura y eficiente para gestionar sus inventarios.
+                  </p>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+  
+          <hr>
+  
+          <button (click)="supportRequests()">
+            <div>
+              <ion-icon name="help-buoy-outline" id="insideIcon"></ion-icon>
+              <span> Soporte </span>
+            </div>
+            <ion-icon name="arrow-forward-outline" id="outIcon"></ion-icon>
+          </button>
+  
+        </div>
+  
       </div>
+  
+    </section>
 
-    </div>
-
-  </section>
-
-  <div id="version">
-    <p></p>
   </div>
 
 </ion-content>

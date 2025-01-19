@@ -51,6 +51,11 @@ export class FirebaseService {
     return userCredential;
   }
 
+  // Método para restablecer la contraseña
+  resetPassword(email: string) {
+    return this.fireAuth.sendPasswordResetEmail(email);
+  }
+
   // Método para reautenticar al usuario
   async reauthenticate(email: string, password: string) {
     const user = await this.fireAuth.currentUser;

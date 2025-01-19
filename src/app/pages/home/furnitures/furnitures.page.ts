@@ -1,9 +1,10 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { ActionSheetController, AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { CloudinaryService } from 'src/app/services/cloudinary/cloudinary.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FurnitureDetailComponent } from 'src/app/components/app-furniture-detail/app-furniture-detail.component';
+import { Network } from '@capacitor/network';
 
 @Component({
   standalone: false,
@@ -18,21 +19,30 @@ export class FurnituresPage implements OnInit {
   // selected file to upload
   selectedFile: File | null = null;
 
+  isOnline: boolean = false;
+
   constructor(
     private alertController: AlertController,
     private toastController: ToastController,
     private cloudinaryService: CloudinaryService,
+    private actionShit: ActionSheetController,
     private modalController: ModalController,
     private loadingController: LoadingController,
     private firestore: AngularFirestore,
     private auth: AngularFireAuth
   ) {}
 
-  /********** Load all furnitures from firestore and save in furnitures array **********/
+  /********** call all functions to init the page **********/
   ngOnInit() {
     this.loadFurnitures();
     this.filterFurnitures();
+
+    Network.getStatus().then((status) => {
+      this.isOnline = status.connected;
+    });
   }
+
+  /********** Load all furnitures from firestore and save in furnitures array **********/  
 
   furnitures: any[] = [];
 
@@ -51,11 +61,42 @@ export class FurnituresPage implements OnInit {
     });
   }
 
+  handleRefresh(event: CustomEvent) {
+    this.alertController.create({
+      header: 'Actualizando...',
+      message: 'No cierres la aplicación.',
+      mode: 'ios',
+      backdropDismiss: false
+    }).then((alert) => {
+      alert.present();
+    });
+
+    setTimeout(async () => {
+      try {
+      const networkStatus = await Network.getStatus();
+      if (networkStatus.connected) {
+        this.alertController.dismiss();
+        window.location.reload()
+        this.alert('Actualización exitosa', 'Los muebles se han actualizado correctamente.');
+      } else {
+        this.alertController.dismiss();
+        this.alert('Sin conexión', 'No hay conexión a internet. Por favor, verifica tu conexión e intenta nuevamente.');
+      }
+      } catch (error) {
+        this.alertController.dismiss();
+        this.alert('Actualización fallida', 'Ha ocurrido un error al intentar actualizar los muebles. Por favor, intentalo nuevamente.');
+        console.error('Error refreshing furnitures:', error);
+      }
+      (event.target as HTMLIonRefresherElement).complete();
+    }, 2000);
+  }
+
   /********** Toast and Alert functions **********/
   async alert(header: string, message: string) {
     const alert = await this.alertController.create({
       header: header,
       message: message,
+      mode: "ios",
       buttons: ['OK']
     });
     await alert.present();
@@ -73,6 +114,7 @@ export class FurnituresPage implements OnInit {
 
   /********** Upload images functions **********/
 
+  // logic to convert JPG/PNG/ETC to WEBP
   async convertToWebP(file: File): Promise<File> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -103,6 +145,7 @@ export class FurnituresPage implements OnInit {
     });
   }
 
+  // logic to select files / photos | CHECKED ✓
   async onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -134,6 +177,7 @@ export class FurnituresPage implements OnInit {
     }
   }  
 
+  // logic to add photos | CHECKED ✓
   async addPhoto(event: any) {
     const fileInput = event.target;
     
@@ -159,6 +203,7 @@ export class FurnituresPage implements OnInit {
     }
   }
 
+  // logic to remove photos from addFurniture() | CHECKED ✓
   removePhoto(index: number) {
     this.photos.splice(index, 1);
   }
@@ -166,20 +211,23 @@ export class FurnituresPage implements OnInit {
   /********** Furniture functions **********/
 
   // logic to filter the furnitures | CHECKED ✓
-  filterFurnitures() {
-    this.filteredFurnitures = this.furnitures.filter(furniture => {
-      return furniture.name.toLowerCase().includes(this.searchQuery.toLowerCase());
-    });
-  }
 
   searchQuery = '';
   filteredFurnitures: any[] = [];
+
+  filterFurnitures() {
+    this.filteredFurnitures = this.furnitures.filter(furniture => {
+      const query = this.searchQuery.toLowerCase();
+      return furniture.name.toLowerCase().includes(query) || furniture.description.toLowerCase().includes(query);
+    });
+  }
 
   // logic to delete a furniture | CHECKED ✓
   async deleteFurniture(furniture: any) {
     const alert = await this.alertController.create({
       header: 'Confirma la eliminación',
       message: `¿Estás seguro de que deseas eliminar el mueble "${furniture.name}"?`,
+      mode: 'ios',
       buttons: [
         {
           text: 'Cancelar',
@@ -206,13 +254,6 @@ export class FurnituresPage implements OnInit {
 
               const collectionRef = this.firestore.collection(`users/${resolvedUser.uid}/furnitures`);
               await collectionRef.doc(docId).delete();
-
-              // delete photos from Cloudinary
-              for (const photo of furniture.photos) {
-                console.log('Deleting photo:', photo);
-                const publicId = photo.split('/').slice(-3).join('/').split('.')[0];
-                await this.cloudinaryService.deleteImage(publicId);
-              }
 
               this.alert("Eliminar mueble", `El mueble "${furniture.name}" ha sido eliminado correctamente.`);
               this.loadFurnitures();
@@ -253,6 +294,7 @@ export class FurnituresPage implements OnInit {
   async addFurniture() {
     const user = this.auth.currentUser;
     if (!user) {
+      this.alert("Usuario no autenticado", "No se ha encontrado un usuario autenticado.");
       console.error('No user is logged in');
       return;
     }
@@ -281,6 +323,7 @@ export class FurnituresPage implements OnInit {
 
     // Mostrar loading
     const loading = await this.loadingController.create({
+      mode: 'ios',
       message: 'Guardando el mueble...',
       spinner: 'crescent'
     });
@@ -349,7 +392,7 @@ export class FurnituresPage implements OnInit {
     });
   }
 
-  // clean the name to furniture ID in Firestore
+  // clean the name to furniture ID in Firestore | CHECKED ✓
   private cleanNameForFirestoreId(name: string): string {
     return name
       .toLowerCase()
@@ -358,7 +401,7 @@ export class FurnituresPage implements OnInit {
       .substring(0, 20);
   }
 
-  // validate the input to avoid special characters
+  // validate the input to avoid special characters | CHECKED ✓
   validateInput(event: any, type: string) {
     const input = event.target as HTMLInputElement;
     const invalidChars = [
@@ -385,7 +428,7 @@ export class FurnituresPage implements OnInit {
     input.value = value;
   }
 
-  // logic to add a cost to the furniture | CHECKED ✓
+  // costs functions | CHECKED ✓
   addCost() {
     this.costs.push({ name: '', value: 0 });
   }
@@ -401,12 +444,11 @@ export class FurnituresPage implements OnInit {
   removeCost(index: number) {
     this.costs.splice(index, 1);
   }
-
-  // logic to add a cut to the furniture | CHECKED ✓
+  
+  // cuts section | CHECKED ✓
   addCut() {
     this.cuts.push({ extent: '', name: '' });
   }
-
 
   updateCut(index: number, field: string, value: any) {
     if (field === 'extent') {
@@ -420,7 +462,7 @@ export class FurnituresPage implements OnInit {
     this.cuts.splice(index, 1);
   }
 
-  // logic to add an accessory to the furniture | CHECKED ✓
+  // accesories sections | CHECKED ✓
   addAccessory() {
     this.accessories.push({ name: '', quantity: 0 });
   }
@@ -437,18 +479,19 @@ export class FurnituresPage implements OnInit {
     this.accessories.splice(index, 1);
   }
 
+  // dismiss or close modals | CHECKED ✓
   dismissModal() {
     if (this.name || this.description || this.frontImg || this.costs.length || this.cuts.length || this.accessories.length || this.photos.length) {
-      this.alertController.create({
-        header: '¿Estás seguro?',
-        message: 'Si cierras esta ventana, perderás los cambios que has realizado en el mueble.',
+      this.actionShit.create({
+        header: '¿Estas seguro de que deseas cancelar?',
+        mode: 'ios',
         buttons: [
           {
             text: 'Cancelar',
             role: 'cancel'
           },
           {
-            text: 'Cerrar',
+            text: 'Cancelar',
             handler: () => {
               this.name = '';
               this.description = '';
@@ -462,14 +505,15 @@ export class FurnituresPage implements OnInit {
             }
           }
         ]
-      }).then((alert) => {
-        alert.present();
+      }).then((actionSheet) => {
+        actionSheet.present();
       });
     }
 
     if (!this.name && !this.description && !this.costs.length && !this.cuts.length && !this.accessories.length && !this.photos.length) {
       this.modalController.dismiss();
     }
+
   }
 
 }
