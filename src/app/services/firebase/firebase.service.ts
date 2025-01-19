@@ -3,7 +3,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { EmailAuthProvider } from '@firebase/auth';
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
 import { Storage } from '@ionic/storage-angular';
 

@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment.prod';
 import axios from 'axios';
 import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class CloudinaryService {
-  private cloudName = 'dmbg8ccsr';
-  private apiKey = '179815289865367';
-  private apiSecret = 'ED2ywLc8lT_xDmZEIbDola-LS9M';
+  private cloudName = environment.cloudinaryConfig.cloudName;
+  private apiKey    = environment.cloudinaryConfig.apiKey;
+  private apiSecret = environment.cloudinaryConfig.apiSecret;
   private uploadPreset = 'default_preset';
 
   constructor() {
