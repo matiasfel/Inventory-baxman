@@ -1,0 +1,146 @@
+.copy {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius : 5px;
+  padding: 5px 10px;
+  color: black;
+  margin-right: 10px;
+  transition: transform 0.3s ease, background 0.3s ease, padding 0.3s ease;
+}
+
+.copy p {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.copy:active {
+  background: #ccc;
+  transform: scale(0.9);
+}
+
+/* ************************ */
+
+ion-accordion-group {
+  margin: 0;
+  padding: 0;
+  border-radius: 16px;
+}
+
+ion-accordion.accordion-expanding,
+ion-accordion.accordion-expanded {
+  margin: 16px auto;
+}
+
+ion-accordion.accordion-expanding:nth-child(3),
+ion-accordion.accordion-expanded:nth-child(3) {
+  margin-bottom: 0;
+}
+
+ion-accordion.accordion-collapsing ion-item[slot='header'],
+ion-accordion.accordion-collapsed ion-item[slot='header'] {
+  --background: #f4f4f4;
+  --color: var(--ion-color-light-contrast);
+}
+
+ion-accordion.accordion-expanding ion-item[slot='header'],
+ion-accordion.accordion-expanded ion-item[slot='header'] {
+  --background: #57a0e4;
+  --color: #fff;
+}
+
+.viewFurniture {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.viewFurniture .container {
+  border-radius: 1rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.viewFurniture .container .photos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.viewFurniture .container .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 1rem;
+  gap: 10px;
+
+  h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+
+  ion-icon {
+    font-size: 1.5rem;
+  }
+}
+
+.viewFurniture .container .name .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 0.5rem;
+  gap: 10px;
+}
+
+.viewFurniture .container .name p {
+  font-size: 1.2rem;
+  margin: 0 0 1.5rem;
+  opacity: 0.6;
+}
+
+.viewFurniture .container .desc .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 0.5rem;
+  gap: 10px;
+}
+
+.viewFurniture .container .desc p {
+  font-size: 1.2rem;
+  margin: 0 0 1.5rem;
+  opacity: 0.6;
+}
+
+.viewFurniture .container .instagram .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 0.5rem;
+  gap: 10px;
+}
+
+.viewFurniture .container .instagram p {
+  font-size: 1.2rem;
+  margin: 0;
+  opacity: 0.6;
+}
+
+
+
+// Basic details
+
+.viewFurniture .container img {
+  border-radius: 1rem;
+}
+
+.separator {
+  width: 100%;
+  background: transparent;
+  text-align: center;
+  color: transparent;
+}

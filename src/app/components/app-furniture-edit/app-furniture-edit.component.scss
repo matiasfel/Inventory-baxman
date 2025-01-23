@@ -1,0 +1,203 @@
+// add furniture style
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.fabButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.addFurniture {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+  margin: 0 auto;
+}
+
+.addFurniture .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.addFurniture .title h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 0;
+}
+
+.addFurniture .title ion-icon {
+  font-size: 1.5rem;
+}
+
+.addFurniture .basicDetails {
+  background-color: #f9f9f9;
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+.addFurniture .basicDetails .inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.addFurniture .basicDetails ion-input {
+  --border-color: #f0ad4e;
+  --highlight-color-focused: #f0ad4e;
+  --highlight-color-valid: #f0ad4e;
+}
+
+.addFurniture .basicDetails ion-textarea {
+  --border-color: #f0ad4e;
+  --highlight-color-focused: #f0ad4e;
+  --highlight-color-valid: #f0ad4e;
+}
+
+
+.addFurniture .photo {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.addFurniture .photoContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.addFurniture .photoCard {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.addFurniture .photoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+.addFurniture .noneButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.addFurniture .noneButton ion-icon {
+  font-size: 1.2rem;
+}
+
+.addFurniture .fileInput {
+  display: none;
+}
+
+.addFurniture .addPhotoButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.addFurniture .addPhotoButton:hover {
+  background-color: #f0f8ff;
+  color: #0056b3;
+}
+
+.addFurniture .avancedDetails {
+  background-color: #f9f9f9;
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.addFurniture .avancedDetails .divisor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.addFurniture .avancedDetails .divisor .item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.addFurniture .avancedDetails .divisor .item ion-input {
+  --highlight-color-focused: #f0ad4e;
+  --highlight-color-valid: #f0ad4e;
+}
+
+.addFurniture .avancedDetails .divisor .item ion-input:nth-child(1) {
+  width: 100%;
+}
+
+.addFurniture .avancedDetails .divisor .item ion-input:nth-child(2) {
+  width: 80%;
+}
+
+.addFurniture .avancedDetails .divisor .item .removeButton {
+  color: #ff4d4d;
+  font-size: 1.5rem;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+}
+
+.addFurniture .avancedDetails .divisor .item .removeButton:active {
+  transform: scale(0.9);
+}
+
+.addFurniture .avancedDetails .divisor .customButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  border-radius: 15px;
+  padding: 15px 30px;
+}
+
+.addFurniture .avancedDetails .divisor .customButton button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+}

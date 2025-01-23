@@ -1,0 +1,140 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>Visualizando: {{ furniture.name }}</ion-title>
+<!--       <ion-buttons slot="start">
+        <ion-button (click)="export()">
+          <ion-icon name="download-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons> -->
+      <ion-buttons slot="end">
+        <ion-button (click)="dismiss()">Cerrar</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <section class="viewFurniture">
+
+      <div class="container">
+        <div class="name">
+
+          <div class="title">
+            <h2>Nombre del mueble</h2>
+            <ion-icon name="pricetag"></ion-icon>
+          </div>
+
+          <!-- CASO UNO | DESCRIPCION Y INSTAGRAM EXISTEN -->
+          <p *ngIf="furniture.description !== '' || furniture.instagram !== ''">{{ furniture.name }}</p>
+
+          <!-- CASO DOS | DESCRIPCION Y INSTAGRAM NO EXISTEN -->
+          <p *ngIf="furniture.description === '' && furniture.instagram === ''" style="margin: 0;">{{ furniture.name }}</p>
+
+        </div>
+
+        <div class="desc">
+
+          <div class="title" *ngIf="furniture.description !== '' ">
+            <h2>Descripción del mueble</h2>
+            <ion-icon name="information-circle"></ion-icon>
+          </div>
+
+            <!-- CASO UNO | DESCRIPCION Y INSTAGRAM EXISTEN -->
+            <p *ngIf="furniture.description !== '' && furniture.instagram !== ''">{{ furniture.description }}</p>
+
+            <!-- CASO DOS | DESCRIPCION Y INSTAGRAM NO EXISTEN -->
+            <p *ngIf="furniture.description !== '' && furniture.instagram === ''" style="margin: 0;">{{ furniture.description }}</p>
+
+        </div>
+
+        <div class="instagram">
+          <div class="title" *ngIf="furniture.instagram !== ''">
+            <h2>Instagram</h2>
+            <ion-icon name="logo-instagram"></ion-icon>
+          </div>
+
+          <p *ngIf="furniture.instagram !== ''"><a href="{{ furniture.instagram }}" target="_blank">https://www.instagram.com/{{furniture.name}}</a></p>
+          
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="title">
+          <h2>Imagenes del mueble</h2>
+          <ion-icon name="image"></ion-icon>
+        </div>
+        <div class="photos">
+          <div *ngFor="let photo of furniture.photos">
+            <img [src]="photo">
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="title">
+          <h2>Detalles avanzados</h2>
+          <ion-icon name="document-lock"></ion-icon>
+        </div>
+
+        <ion-accordion-group expand="inset" [multiple]="true">
+          <ion-accordion value="first" toggleIconSlot="end">
+            <ion-item slot="header">
+              <h2>Costos</h2>
+            </ion-item>
+            <div class="ion-padding" slot="content" *ngIf="furniture.costs.length > 0">
+              <ion-item *ngFor="let cost of furniture.costs">
+                <ion-label>{{ cost.name }}: {{ cost.value | currency:'USD':'symbol':'1.0-0' }}</ion-label>
+                <button class="copy" (click)="copy($event)">Copiar</button>
+              </ion-item>
+              <ion-item> 
+                <ion-label> <strong>Total: {{ totalValue | currency:'USD':'symbol':'1.0-0' }}</strong> </ion-label> 
+                <button class="copy" (click)="copy($event)">Copiar</button>
+              </ion-item>
+            </div>
+            <div class="ion-padding" slot="content" *ngIf="furniture.costs.length === 0">
+              <ion-item lines="none">
+                <ion-label> No hay costos asociados a este mueble.</ion-label>
+              </ion-item>
+            </div>
+          </ion-accordion>
+
+          <ion-accordion value="second">
+            <ion-item slot="header">
+              <h2>Cortes</h2>
+            </ion-item>
+            <div class="ion-padding" slot="content" *ngIf="furniture.cuts.length > 0">
+              <ion-item *ngFor="let cut of furniture.cuts">
+                <ion-label>{{cut.extent}} = {{ cut.name }}</ion-label>
+                <button class="copy" (click)="copy($event)"> Copiar </button>
+              </ion-item>
+            </div>
+            
+            <div class="ion-padding" slot="content" *ngIf="furniture.cuts.length === 0">
+              <ion-item lines="none">
+                <ion-label> No hay cortes asociados a este mueble.</ion-label>
+              </ion-item>
+            </div>
+          </ion-accordion>
+
+          <ion-accordion value="third">
+            <ion-item slot="header">
+              <h2>Accesorios</h2>
+            </ion-item>
+            <div class="ion-padding" slot="content" *ngIf="furniture.accessories.length > 0">
+              <ion-item *ngFor="let accessory of furniture.accessories">
+                <ion-label>{{ accessory.name }}: {{ accessory.quantity }}</ion-label>
+                <button class="copy" (click)="copy($event)"> Copiar </button>
+              </ion-item>
+            </div>
+            <div class="ion-padding" slot="content" *ngIf="furniture.accessories.length === 0">
+              <ion-item lines="none">
+                <ion-label> No hay accesorios asociados a este mueble.</ion-label>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </div>
+
+      <div class="separator">
+        ---
+      </div>
+    </section>
+  </ion-content>

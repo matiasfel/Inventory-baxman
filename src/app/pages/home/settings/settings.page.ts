@@ -193,14 +193,14 @@ export class SettingsPage implements OnInit {
       mode: 'ios',
       buttons: [
         {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
           text: 'Enviar correo',
           handler: () => {
             window.open('mailto:matiasbaxman@gmail.com?subject=Soporte%20de%20Inventario&body=Describe%20tu%20problema%20aquí');
           }
-        },
-        {
-          text: 'Cancelar',
-          role: 'cancel'
         }
       ]
     }).then(alert => alert.present());

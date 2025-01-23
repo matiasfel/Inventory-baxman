@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment.prod';
 import axios from 'axios';
 import * as CryptoJS from 'crypto-js';
 
@@ -8,9 +7,9 @@ import * as CryptoJS from 'crypto-js';
 })
 
 export class CloudinaryService {
-  private cloudName = environment.cloudinaryConfig.cloudName;
-  private apiKey    = environment.cloudinaryConfig.apiKey;
-  private apiSecret = environment.cloudinaryConfig.apiSecret;
+  private cloudName = "dmbg8ccsr";
+  private apiKey    = "179815289865367";
+  private apiSecret = "ED2ywLc8lT_xDmZEIbDola-LS9M";
   private uploadPreset = 'default_preset';
 
   constructor() {
@@ -35,13 +34,13 @@ export class CloudinaryService {
   }
 
   async deleteImage(publicId: string): Promise<any> {
-    const timestamp = Math.floor(Date.now() / 1000);
-    const signature = this.generateSignature(publicId, timestamp);
+    const timestamp = Math.floor(Date.now() / 1000); // Generar timestamp actual
+    const signature = this.generateSignature(publicId, timestamp); // Firma la solicitud
   
-    const formData = new URLSearchParams();
+    const formData = new FormData();
     formData.append('public_id', publicId);
-    formData.append('api_key', this.apiKey);
     formData.append('timestamp', timestamp.toString());
+    formData.append('api_key', this.apiKey);
     formData.append('signature', signature);
   
     try {
@@ -49,8 +48,7 @@ export class CloudinaryService {
         `https://api.cloudinary.com/v1_1/${this.cloudName}/image/destroy`,
         formData
       );
-      console.log('Delete response:',response.data); // Verifica la respuesta
-      return response.data; // Devuelve información de la imagen eliminada
+      return response.data; // Devuelve la respuesta de Cloudinary
     } catch (error) {
       console.error('Error al eliminar la imagen:', error);
       throw error;

@@ -118,6 +118,44 @@ ion-searchbar {
     object-fit: cover;
 }
 
+.cards .card .instagramButton {
+    display: flex;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    background-color: transparent;
+    transition: transform 0.3s ease;
+}
+
+.cards .card .instagramButton:active {
+    transform: scale(0.9);
+}
+
+.cards .card .instagramButton .instagramImage {
+    width: 45px;
+    height: 45px;
+}
+
+.cards .card .nonInstagramButton {
+    background-color: transparent;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    transition: transform 0.3s ease;
+}
+
+.cards .card .nonInstagramButton:active {
+    transform: scale(0.9);
+}
+
+.cards .card .nonInstagramButton .nonInstagramImage {
+    filter: grayscale(100%);
+    width: 45px;
+    height: 45px;
+}
+
 .cards .card p {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -146,7 +184,7 @@ ion-searchbar {
     gap: 10px;
 }
 
-.cards .card button {
+.cards .card .buttons button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -157,17 +195,22 @@ ion-searchbar {
     color: #fff;
 }
 
-.cards .card button:nth-child(1) {
-    background-color: #ff4d4d;
+.cards .card .buttons button:nth-child(1) {
+    background-color: #f0ad4e;
+    color: #fff;
 }
 
-.cards .card button:nth-child(2) {
-    background-color: #0054e9;
+.cards .card .buttons button:nth-child(2) {
+    background-color: #e45757;
 }
 
-.cards .card button:active {
+.cards .card .buttons button:nth-child(3) {
+    background-color: #57a0e4;
+}
+
+.cards .card .buttons button:active {
     transform: scale(0.9);
-}
+}ß
 
 .cards .card ion-card {
     width: 100%;
@@ -178,9 +221,9 @@ ion-searchbar {
 
 // separator 2
 
-#separator2 {
+#separator {
     width: 100%;
-    margin-top: 70px;
+    margin-top: 100px;
 }
 
 // add furniture style
@@ -231,7 +274,14 @@ ion-searchbar {
     gap: 20px;
 }
 
-.addFurniture .basicDetails ion-input, ion-textarea {
+.addFurniture .basicDetails ion-input {
+    --border-color: #8da9c6;
+    --highlight-color-focused: #8da9c6;
+    --highlight-color-valid: #8da9c6;
+}
+
+.addFurniture .basicDetails ion-textarea {
+    --border-color: #8da9c6;
     --highlight-color-focused: #8da9c6;
     --highlight-color-valid: #8da9c6;
 }

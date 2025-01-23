@@ -1,0 +1,224 @@
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Editando: {{furniture.furnitureId }} </ion-title>
+      <ion-buttons slot="start">
+          <ion-button (click)="dismiss()">Cancelar</ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button (click)="saveChanges()">Guardar</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+
+    <div class="addFurniture">
+
+      <section class="basicDetails">
+
+        <div class="title">
+          <h1>Detalles basicos</h1>
+          <ion-icon name="document"></ion-icon>
+        </div>
+
+        <div class="inputs">
+          <ion-input 
+            mode="md"
+            label="Nombre"
+            label-placement="stacked" 
+            fill="outline"
+            name="name"
+            [value]="this.furniture.name"
+            disabled>
+          </ion-input>
+
+          <ion-textarea 
+            mode="md"
+            label="Descripción"
+            label-placement="stacked" 
+            fill="outline"
+            [autoGrow]="true"
+            [counter]="true"
+            maxlength="500"
+            name="description"
+            [(ngModel)]="description"
+            (ionInput)="validateInput($event, 'textarea')">
+          </ion-textarea>
+
+          <ion-input 
+            mode="md"
+            label="Link de instagram"
+            label-placement="stacked" 
+            fill="outline"
+            name="instagram"
+            [(ngModel)]="instagram">
+          </ion-input>
+
+        </div>
+
+      </section>
+
+      <section class="photo">
+        <div class="title">
+          <h1>Fotografías</h1>
+          <ion-icon name="images"></ion-icon>
+        </div>
+      
+        <div class="photoContainer">
+          <div class="photoCard" *ngFor="let photo of furniture.photos; let i = index">
+            <img [src]="photo" alt="Foto" class="photoImage">
+            <button class="noneButton">
+              <ion-icon name="ban"></ion-icon>
+            </button>
+          </div>
+        </div>
+      </section>        
+
+      <section class="avancedDetails">
+        <div class="title">
+          <h1>Detalles avanzados</h1>
+          <ion-icon name="document-lock"></ion-icon>
+        </div>
+
+        <div 
+          class="divisor"
+          [ngStyle]="{
+            'padding': costs.length > 0 ? '20px' : '0',
+            'border-radius': costs.length > 0 ? '15px' : '0',
+            'background-color': costs.length > 0 ? '#fff' : 'transparent'
+            }"
+        >
+          <h2 *ngIf="costs.length > 0">Costos</h2>
+          <div class="item" *ngFor="let cost of costs; let i = index ">
+            <ion-input 
+              mode="md"
+              label="Nombre"
+              label-placement="stacked" 
+              fill="solid"
+              type="text"
+              [(ngModel)]="cost.name">
+            </ion-input>
+
+            <ion-input 
+              mode="md"
+              label-placement="stacked" 
+              label="Valor"
+              fill="solid"
+              type="number"
+              [(ngModel)]="cost.value">
+            </ion-input>
+
+            <button class="removeButton" (click)="removeCost(i)">
+              <ion-icon name="trash-bin"></ion-icon>
+            </button>
+          </div>
+
+          <button 
+            class="customButton" 
+            (click)="addCost()" 
+            [ngStyle]="{
+              'background-color': costs.length > 0 ? '#f0ad4e' : '#f0ad4e',
+              'border-radius': costs.length > 0 ? '0' : '15px'
+              }"
+          >
+            <p *ngIf="costs.length === 0">Agregar costos</p>
+            <p *ngIf="costs.length > 0">Agregar item</p>
+          </button>
+          
+        </div>
+
+        <div 
+          class="divisor"
+          [ngStyle]="{
+            'padding': cuts.length > 0 ? '20px' : '0',
+            'border-radius': cuts.length > 0 ? '15px' : '0',
+            'background-color': cuts.length > 0 ? '#fff' : 'transparent'
+            }"
+        >
+          <h2 *ngIf="cuts.length > 0">Cortes</h2>
+          <div class="item" *ngFor="let cut of cuts; let i = index ">
+            <ion-input 
+              mode="md"
+              label="Medida"
+              label-placement="stacked" 
+              fill="solid"
+              type="text"
+              [(ngModel)]="cut.extent">
+            </ion-input>
+
+            <ion-input 
+              mode="md"
+              label-placement="stacked" 
+              label="Nombre"
+              fill="solid"
+              type="text"
+              [(ngModel)]="cut.name">
+            </ion-input>
+
+            <button class="removeButton" (click)="removeCut(i)">
+              <ion-icon name="trash-bin"></ion-icon>
+            </button>
+          </div>
+
+          <button 
+            class="customButton" 
+            (click)="addCut()" 
+            [ngStyle]="{
+              'background-color': costs.length > 0 ? '#f0ad4e' : '#f0ad4e',
+              'border-radius': costs.length > 0 ? '0' : '15px'
+              }"
+          >
+            <p *ngIf="cuts.length === 0">Agregar cortes</p>
+            <p *ngIf="cuts.length > 0">Agregar item</p>
+          </button>
+        </div>
+
+        <div 
+          class="divisor"
+          [ngStyle]="{
+            'padding': accessories.length > 0 ? '20px' : '0',
+            'border-radius': accessories.length > 0 ? '15px' : '0',
+            'background-color': accessories.length > 0 ? '#fff' : 'transparent',
+            }"
+        >
+          <h2 *ngIf="accessories.length > 0">Accesorios</h2>
+          <div class="item" *ngFor="let accesory of accessories; let i = index ">
+            <ion-input 
+              mode="md"
+              label="Nombre"
+              label-placement="stacked" 
+              fill="solid"
+              type="text"
+              [(ngModel)]="accesory.name">
+            </ion-input>
+
+            <ion-input 
+              mode="md"
+              label-placement="stacked" 
+              label="Cantidad"
+              fill="solid"
+              type="number"
+              [(ngModel)]="accesory.quantity">
+            </ion-input>
+
+            <button class="removeButton" (click)="removeAccessory(i)">
+              <ion-icon name="trash-bin"></ion-icon>
+            </button>
+          </div>
+
+          <button 
+            class="customButton" 
+            (click)="addAccessory()" 
+            [ngStyle]="{
+              'background-color': costs.length > 0 ? '#f0ad4e' : '#f0ad4e',
+              'border-radius': costs.length > 0 ? '0' : '15px'
+              }"
+          >
+            <p *ngIf="accessories.length === 0">Agregar accesorios</p>
+            <p *ngIf="accessories.length > 0">Agregar item</p>
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+  </ion-content>

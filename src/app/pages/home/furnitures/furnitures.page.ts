@@ -4,6 +4,7 @@ import { CloudinaryService } from 'src/app/services/cloudinary/cloudinary.servic
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FurnitureDetailComponent } from 'src/app/components/app-furniture-detail/app-furniture-detail.component';
+import { FurnitureEditComponent } from 'src/app/components/app-furniture-edit/app-furniture-edit.component';
 import { Network } from '@capacitor/network';
 
 @Component({
@@ -42,6 +43,13 @@ export class FurnituresPage implements OnInit {
     });
   }
 
+  /********** About furnitures **********/
+
+  about(){
+    const count = this.furnitures.length;
+    this.alert('Cantidad de muebles', `Hay un total de ${count} muebles cargados en la nube.`);
+  }
+
   /********** Load all furnitures from firestore and save in furnitures array **********/  
 
   furnitures: any[] = [];
@@ -77,7 +85,6 @@ export class FurnituresPage implements OnInit {
       if (networkStatus.connected) {
         this.alertController.dismiss();
         window.location.reload()
-        this.alert('Actualización exitosa', 'Los muebles se han actualizado correctamente.');
       } else {
         this.alertController.dismiss();
         this.alert('Sin conexión', 'No hay conexión a internet. Por favor, verifica tu conexión e intenta nuevamente.');
@@ -205,7 +212,25 @@ export class FurnituresPage implements OnInit {
 
   // logic to remove photos from addFurniture() | CHECKED ✓
   removePhoto(index: number) {
-    this.photos.splice(index, 1);
+    this.alertController.create({
+      header: 'Eliminar foto',
+      message: '¿Estás seguro de que deseas eliminar esta foto?',
+      mode: 'ios',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.photos.splice(index, 1);
+          }
+        }
+      ]
+    }).then((alert) => {
+      alert.present();
+    });
   }
 
   /********** Furniture functions **********/
@@ -218,8 +243,53 @@ export class FurnituresPage implements OnInit {
   filterFurnitures() {
     this.filteredFurnitures = this.furnitures.filter(furniture => {
       const query = this.searchQuery.toLowerCase();
-      return furniture.name.toLowerCase().includes(query) || furniture.description.toLowerCase().includes(query);
+      return furniture.name.toLowerCase().includes(query) || furniture.description.toLowerCase().includes(query) || furniture.tags;
     });
+  }
+
+  // logic to open instagram | CHECKED ✓
+
+  async openInstagram(furniture: any) {
+    if (!furniture.instagram) {
+      this.alert('Instagram no disponible', 'No has proporcionado una URL para este mueble.');
+      return;
+    } else {
+      this.alertController.create({
+        header: 'Abrir Instagram',
+        message: '¿Desea abrir Instagram para ver la publicación de este mueble?',
+        mode: 'ios',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel'
+          },
+          {
+            text: 'Abrir',
+            handler: () => {
+              const url = `${furniture.instagram}`;
+              window.open(url, '_blank');
+            }
+          }
+        ]
+      }).then((alert) => {
+        alert.present();
+      });
+    }
+  }
+
+  // logic to edit a furniture | CHECKED ✓
+  async editFurniture(furniture: any) {
+    const modal = await this.modalController.create({
+      mode: 'ios',
+      component: FurnitureEditComponent,
+      componentProps: { furniture }
+    });
+    modal.onDidDismiss().then((data) => {
+      if (data.data) {
+        this.loadFurnitures();
+      }
+    });
+    return await modal.present();
   }
 
   // logic to delete a furniture | CHECKED ✓
@@ -241,21 +311,41 @@ export class FurnituresPage implements OnInit {
               console.error('No user is logged in');
               return;
             }
-
+  
             const docId = this.cleanNameForFirestoreId(furniture.name);
-
+  
             try {
-
               const resolvedUser = await user;
               if (!resolvedUser) {
                 console.error('No user is logged in');
                 return;
               }
-
+  
               const collectionRef = this.firestore.collection(`users/${resolvedUser.uid}/furnitures`);
+              const furnitureDoc = await collectionRef.doc(docId).get().toPromise();
+  
+              if (!furnitureDoc || !furnitureDoc.exists) {
+                console.error('El mueble no existe en la base de datos.');
+                return;
+              }
+  
+              const furnitureData = furnitureDoc.data() as { photos?: string[] };
+              const photos = furnitureData.photos || []; // Obtén las fotos asociadas
+  
+              // Eliminar imágenes de Cloudinary
+              for (const photoUrl of photos) {
+                try {
+                  const publicId = this.extractPublicId(photoUrl);
+                  await this.cloudinaryService.deleteImage(publicId);
+                } catch (error) {
+                  console.error('Error al eliminar imagen en Cloudinary:', error);
+                }
+              }
+  
+              // Eliminar mueble en Firestore
               await collectionRef.doc(docId).delete();
-
-              this.alert("Eliminar mueble", `El mueble "${furniture.name}" ha sido eliminado correctamente.`);
+  
+              this.alert("Mueble eliminado", `El mueble con el identificador "${furniture.furnitureId}" ha sido eliminado correctamente.`);
               this.loadFurnitures();
             } catch (error) {
               this.alert("Eliminar mueble", `Ha ocurrido un error al intentar eliminar el mueble "${furniture.name}". Por favor, intentalo nuevamente.`);
@@ -267,6 +357,14 @@ export class FurnituresPage implements OnInit {
       ],
     });
     await alert.present();
+  }  
+
+  // extract public id 
+  extractPublicId(photoUrl: string): string {
+    const parts = photoUrl.split('/');
+    const lastPart = parts[parts.length - 1]; // Obtiene la última parte de la URL
+    const publicId = lastPart.split('.')[0]; // Remueve la extensión del archivo
+    return publicId;
   }
 
   // logic to view the furniture details | CHECKED ✓
@@ -282,9 +380,11 @@ export class FurnituresPage implements OnInit {
   }
 
   // logic to add a new furniture | CHECKED ✓
-  frontImg = '';
+  furnitureId = '';
   name = '';
   description = '';
+  instagram = '';
+  frontImg = '';
 
   costs: { name: string; value: number }[] = [];
   cuts: { extent: string; name: string }[] = [];
@@ -305,9 +405,11 @@ export class FurnituresPage implements OnInit {
     }
 
     const furniture = {
-      frontImg: '',
+      furnitureId: this.furnitureId,
       name: this.name,
       description: this.description,
+      instagram: this.instagram,
+      frontImg: '',
       costs: this.costs,
       cuts: this.cuts,
       accessories: this.accessories,
@@ -316,6 +418,21 @@ export class FurnituresPage implements OnInit {
 
     if (!furniture.name) {
       this.alert("Nombre requerido", "Debes ingresar un nombre para el mueble.");
+      return;
+    }
+
+    if (furniture.costs.some(cost => cost.name === '')) {
+      this.alert("Especificación", "Debes ingresar al menos un nombre para el costo del mueble.");
+      return;
+    }
+
+    if (furniture.cuts.some(cut => cut.extent === '' || cut.name === '')) {
+      this.alert("Especificación", "Debes ingresar al menos una medida y un nombre para el corte del mueble.");
+      return;
+    }
+
+    if (furniture.accessories.some(accessory => accessory.name === '')) {
+      this.alert("Especificación", "Debes ingresar al menos un nombre para el accesorio del mueble.");
       return;
     }
 
@@ -364,6 +481,7 @@ export class FurnituresPage implements OnInit {
 
         // Establecer la primera imagen como frontImg
         furniture.frontImg = furniture.photos[0] || '';
+        furniture.furnitureId = docId;
 
         // Guardar mueble en Firestore
         await collectionRef.doc(docId).set(furniture);
@@ -373,6 +491,7 @@ export class FurnituresPage implements OnInit {
         // Limpiar formulario
         this.name = '';
         this.description = '';
+        this.instagram = '';
         this.frontImg = '';
         this.photos = [];
         this.costs = [];
@@ -437,12 +556,28 @@ export class FurnituresPage implements OnInit {
     if (field === 'name') {
       this.costs[index].name = value;
     } else if (field === 'value') {
-      this.costs[index].value = parseFloat(value);
+      this.costs[index].value = parseInt(value);
     }
   }
 
   removeCost(index: number) {
-    this.costs.splice(index, 1);
+    this.alertController.create({
+      header: 'Eliminar item',
+      message: 'Si eliminas este item, se perderá para siempre.',
+      mode: 'ios',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.costs.splice(index, 1);
+          }
+        }
+      ]
+    }).then(alert => alert.present());
   }
   
   // cuts section | CHECKED ✓
@@ -459,7 +594,23 @@ export class FurnituresPage implements OnInit {
   }
 
   removeCut(index: number) {
-    this.cuts.splice(index, 1);
+    this.alertController.create({
+      header: 'Eliminar item',
+      message: 'Si eliminas este item, se perderá para siempre.',
+      mode: 'ios',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.cuts.splice(index, 1);
+          }
+        }
+      ]
+    }).then(alert => alert.present());
   }
 
   // accesories sections | CHECKED ✓
@@ -476,25 +627,43 @@ export class FurnituresPage implements OnInit {
   }
 
   removeAccessory(index: number) {
-    this.accessories.splice(index, 1);
+    this.alertController.create({
+      header: 'Eliminar item',
+      message: 'Si eliminas este item, se perderá para siempre.',
+      mode: 'ios',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.accessories.splice(index, 1);
+          }
+        }
+      ]
+    }).then(alert => alert.present());
   }
 
   // dismiss or close modals | CHECKED ✓
   dismissModal() {
-    if (this.name || this.description || this.frontImg || this.costs.length || this.cuts.length || this.accessories.length || this.photos.length) {
-      this.actionShit.create({
-        header: '¿Estas seguro de que deseas cancelar?',
+    if (this.name || this.description || this.costs.length || this.cuts.length || this.accessories.length || this.photos.length) {
+      this.alertController.create({
+        header: '¿Estas seguro?',
+        message: 'Si cancelas se perderán los datos ingresados.',
         mode: 'ios',
         buttons: [
           {
-            text: 'Cancelar',
+            text: 'No, continuar',
             role: 'cancel'
           },
           {
-            text: 'Cancelar',
+            text: 'Si, cancelar',
             handler: () => {
               this.name = '';
               this.description = '';
+              this.instagram = '';
               this.frontImg = '';
               this.photos = [];
               this.costs = [];
@@ -505,8 +674,8 @@ export class FurnituresPage implements OnInit {
             }
           }
         ]
-      }).then((actionSheet) => {
-        actionSheet.present();
+      }).then((alert) => {
+        alert.present();
       });
     }
 

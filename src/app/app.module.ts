@@ -13,9 +13,11 @@ import { environment } from 'src/environments/environment';
 
 import { TermsModalComponent } from './components/terms-modal/terms-modal.component';
 import { FurnitureDetailComponent } from './components/app-furniture-detail/app-furniture-detail.component';
+import { FurnitureEditComponent } from './components/app-furniture-edit/app-furniture-edit.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, TermsModalComponent, FurnitureDetailComponent],
+  declarations: [AppComponent, TermsModalComponent, FurnitureDetailComponent, FurnitureEditComponent],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 
@@ -23,6 +25,7 @@ import { FurnitureDetailComponent } from './components/app-furniture-detail/app-
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
+    FormsModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AnimationController],
   bootstrap: [AppComponent],

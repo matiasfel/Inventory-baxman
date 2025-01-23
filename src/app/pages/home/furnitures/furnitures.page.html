@@ -1,6 +1,11 @@
 <ion-header mode="ios" [translucent]="true">
   <ion-toolbar>
     <ion-title>Muebles</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="about()">
+        <ion-icon name="cloud"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar
@@ -54,15 +59,35 @@
             <ion-col size="12">
               <ion-card mode="ios">
                 <img [src]="furniture.frontImg" alt="">
+                <button
+                  (click)="openInstagram(furniture)"  
+                  class="instagramButton"
+                  *ngIf="furniture.instagram.length > 0"
+                >
+                  <img class="instagramImage" src="/assets/Instagram_icon.png" alt="">
+                </button>
+
+                <button 
+                  (click)="openInstagram(furniture)"
+                  class="nonInstagramButton"
+                  *ngIf="furniture.instagram === '' "
+                >
+                  <img class="nonInstagramImage" src="/assets/Instagram_icon.png" alt="">
+                </button>
                 <ion-card-header>
                   <ion-card-title>
-                    <h1>{{ furniture.name }}</h1>
+                    <h1 *ngIf="furniture.description.length > 0" >{{ furniture.name }}</h1>
+                    <h1 *ngIf="furniture.description.length === 0" style="margin-bottom: 5px;">{{ furniture.name }}</h1>
                   </ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
                   <p *ngIf="furniture.description.length > 0" id="description">{{ furniture.description }}</p>
                   <p *ngIf="furniture.description.length === 0" style="display: none;"></p>
                   <div class="buttons">
+                    <button (click)="editFurniture(furniture)">
+                      <p>Editar</p>
+                      <ion-icon name="pencil"></ion-icon>
+                    </button>
                     <button (click)="deleteFurniture(furniture)">
                       <p>Eliminar</p>
                       <ion-icon name="trash"></ion-icon>
@@ -81,7 +106,8 @@
     </section>
   </div>
 
-  <div id="separator2">
+  <div id="separator">
+    
   </div>
 
   <section class="fabButton">
@@ -92,7 +118,7 @@
     </ion-fab>
   </section>
 
-  <ion-modal trigger="addFurniture" mode="ios" backdropDismiss="false">
+  <ion-modal trigger="addFurniture" mode="ios">
     <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -119,7 +145,7 @@
           <div class="inputs">
             <ion-input 
               mode="md"
-              label="Nombre"
+              label="Nombre (Obligatorio)"
               label-placement="stacked" 
               fill="outline" 
               (ionInput)="validateInput($event, 'input')"
@@ -129,7 +155,7 @@
 
             <ion-textarea 
               mode="md"
-              label="Descripción"
+              label="Descripción (Opcional)"
               label-placement="stacked" 
               fill="outline"
               [autoGrow]="true"
@@ -139,6 +165,16 @@
               name="description"
               [(ngModel)]="description">
             </ion-textarea>
+
+            <ion-input 
+              mode="md"
+              label="Link de instagram (Opcional)"
+              label-placement="stacked" 
+              fill="outline"
+              name="instagram"
+              [(ngModel)]="instagram">
+            </ion-input>
+
           </div>
 
         </section>
@@ -223,7 +259,7 @@
             
           </div>
 
-            <div 
+          <div 
             class="divisor"
             [ngStyle]="{
               'padding': cuts.length > 0 ? '20px' : '0',
