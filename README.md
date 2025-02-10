@@ -33,38 +33,28 @@ Cada vez que necesitaba recrear un mueble previamente hecho, debía revisar manu
 
 #### Registrarse  
 <img src="src/assets/demo/register.gif" alt="Registrarse">  
-
 #### Recuperar contraseña  
 <img src="src/assets/demo/pass-recovery.gif" alt="Recuperar contraseña">  
-
 #### Iniciar sesión  
 <img src="src/assets/demo/login-in.gif" alt="Iniciar sesión">  
-
-</div>
-
-<div align="center">
 
 ### 🔹 Uso de la aplicación  
 
 #### Configuración  
 <img src="src/assets/demo/settings.gif" alt="Configuración">  
-
 #### Crear mueble  
 <img src="src/assets/demo/create-furniture.gif" alt="Crear mueble">  
-
 #### Visualizar mueble  
 <img src="src/assets/demo/view-furniture.gif" alt="Visualizar mueble">  
-
 #### Editar mueble  
 <img src="src/assets/demo/edit-furniture.gif" alt="Editar mueble">  
-
 #### Borrar mueble  
 <img src="src/assets/demo/delete-furniture.gif" alt="Borrar mueble">  
-
 #### Filtrar muebles  
 <img src="src/assets/demo/filter-example.gif" alt="Filtrar muebles">  
 
 </div>
+
 ## 📌 Instalación y uso
 
 Tener en cuenta que esta aplicación esta diseñada para ser utilizada en Android y no para IOS.
