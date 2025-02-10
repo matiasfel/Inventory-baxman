@@ -28,16 +28,32 @@ Cada vez que necesitaba recrear un mueble previamente hecho, debía revisar manu
 ## 📱 Capturas de pantalla y gifs
 
 ### 🔹 Autentificación
-![Registrarse](src/assets/demo/register.gif)  
+#### Registrarse
+![Registrarse](src/assets/demo/register.gif)
+
+#### Recuperar contraseña
 ![Recuperar contraseña](src/assets/demo/pass-recovery.gif)
+
+#### Iniciar sesión
 ![Iniciar sesión](src/assets/demo/login-in.gif)
 
 ### 🔹 Uso de la aplicación
+#### Configuración
 ![Configuración](src/assets/demo/settings.gif)  
-![Crear mueble](src/assets/demo/create-furniture.gif)  
-![Visualizar mueble](src/assets/demo/view-furniture.gif)  
+
+#### Crear mueble
+![Crear mueble](src/assets/demo/create-furniture.gif)
+
+#### Visualizar mueble
+![Visualizar mueble](src/assets/demo/view-furniture.gif) 
+
+#### Editar mueble
 ![Editar mueble](src/assets/demo/edit-furniture.gif)  
+
+#### Borrar mueble
 ![Borrar mueble](src/assets/demo/delete-furniture.gif)  
+
+#### Filtrar muebles
 ![Filtrar muebles](src/assets/demo/filter-example.gif)  
 
 ## 📌 Instalación y uso
