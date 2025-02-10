@@ -29,13 +29,15 @@ Cada vez que necesitaba recrear un mueble previamente hecho, debía revisar manu
 
 <div align="center">
 
-### 🔹 Autenticación  
+### 🔹 Autenticación
+<p style="opacity: 0.8;">(Registrarse, recuperar contraseña y iniciar sesión)</p>
 
 <img src="src/assets/demo/register.gif" alt="Registrarse">  
 <img src="src/assets/demo/pass-recovery.gif" alt="Recuperar contraseña">  
 <img src="src/assets/demo/login-in.gif" alt="Iniciar sesión">  
 
-### 🔹 Uso de la aplicación  
+### 🔹 Uso de la aplicación
+<p style="opacity: 0.8;">(Configuración, crear mueble, visualizar mueble, editar mueble, borrar mueble y filtrar mueble.)</p>
 
 <img src="src/assets/demo/settings.gif" alt="Configuración">  
 <img src="src/assets/demo/create-furniture.gif" alt="Crear mueble"> 
