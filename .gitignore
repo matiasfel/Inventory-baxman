@@ -72,3 +72,4 @@ Thumbs.db
 # Prod ignores
 /src/environments/*src/environments/environment.ts
 src/environments/environment.prod.ts
+.env
