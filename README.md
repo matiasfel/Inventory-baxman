@@ -27,35 +27,44 @@ Cada vez que necesitaba recrear un mueble previamente hecho, debía revisar manu
 
 ## 📱 Capturas de pantalla y gifs
 
-### 🔹 Autentificación
-#### Registrarse
-![Registrarse](src/assets/demo/register.gif)
+<div align="center">
 
-#### Recuperar contraseña
-![Recuperar contraseña](src/assets/demo/pass-recovery.gif)
+### 🔹 Autenticación  
 
-#### Iniciar sesión
-![Iniciar sesión](src/assets/demo/login-in.gif)
+#### Registrarse  
+<img src="src/assets/demo/register.gif" alt="Registrarse">  
 
-### 🔹 Uso de la aplicación
-#### Configuración
-![Configuración](src/assets/demo/settings.gif)  
+#### Recuperar contraseña  
+<img src="src/assets/demo/pass-recovery.gif" alt="Recuperar contraseña">  
 
-#### Crear mueble
-![Crear mueble](src/assets/demo/create-furniture.gif)
+#### Iniciar sesión  
+<img src="src/assets/demo/login-in.gif" alt="Iniciar sesión">  
 
-#### Visualizar mueble
-![Visualizar mueble](src/assets/demo/view-furniture.gif) 
+</div>
 
-#### Editar mueble
-![Editar mueble](src/assets/demo/edit-furniture.gif)  
+<div align="center">
 
-#### Borrar mueble
-![Borrar mueble](src/assets/demo/delete-furniture.gif)  
+### 🔹 Uso de la aplicación  
 
-#### Filtrar muebles
-![Filtrar muebles](src/assets/demo/filter-example.gif)  
+#### Configuración  
+<img src="src/assets/demo/settings.gif" alt="Configuración">  
 
+#### Crear mueble  
+<img src="src/assets/demo/create-furniture.gif" alt="Crear mueble">  
+
+#### Visualizar mueble  
+<img src="src/assets/demo/view-furniture.gif" alt="Visualizar mueble">  
+
+#### Editar mueble  
+<img src="src/assets/demo/edit-furniture.gif" alt="Editar mueble">  
+
+#### Borrar mueble  
+<img src="src/assets/demo/delete-furniture.gif" alt="Borrar mueble">  
+
+#### Filtrar muebles  
+<img src="src/assets/demo/filter-example.gif" alt="Filtrar muebles">  
+
+</div>
 ## 📌 Instalación y uso
 
 Tener en cuenta que esta aplicación esta diseñada para ser utilizada en Android y no para IOS.
