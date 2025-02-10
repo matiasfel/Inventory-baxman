@@ -30,7 +30,6 @@ Cada vez que necesitaba recrear un mueble previamente hecho, debía revisar manu
 ### 🔹 Autentificación
 ![Registrarse](src/assets/demo/register.gif)  
 ![Recuperar contraseña](src/assets/demo/pass-recovery.gif)
-![Email real](src/assets/demo/pass-recovery-email.png)
 ![Iniciar sesión](src/assets/demo/login-in.gif)
 
 ### 🔹 Uso de la aplicación
