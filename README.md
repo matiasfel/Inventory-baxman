@@ -20,22 +20,39 @@ Cada vez que necesitaba recrear un mueble previamente hecho, debía revisar manu
 ## 🛠️ Tecnologías utilizadas  
 
 - **Ionic + Angular** para el desarrollo de la esta aplicación ya que se han utilizado componentes hechos por ellos, iconos, etc.
-- **TypeScript** lenguaje utilizado para manejar la aplicación.
+- **TypeScript** para mejorar la logica.
 - **SCSS** para el diseño y estilización.
 - **Firebase** para el almacenado de información como los muebles agregados.
 - **Cloudinary** para el almacenado de imagenes que se encuentran dentro de los muebles agregados.
 
-## 📱 Capturas de pantalla
+## 📱 Capturas de pantalla y gifs
 
-![Registrarse](src/assets/demo/register.gif)
-![Recuperar contraseña](src/assets/demo/pass-recovery.gif)
-![Iniciar sesión](src/assets/demo/login-in.gif)
-![Configuración](src/assets/demo/settings.gif)
-![Crear mueble](src/assets/demo/create-furniture.gif)
-![Visualizar mueble](src/assets/demo/view-furniture.gif)
-![Editar mueble](src/assets/demo/edit-furniture.gif)
-![Borrar mueble](src/assets/demo/delete-furniture.gif)
-![Filtrar muebles](src/assets/demo/filter-example.gif)
+### 🔹 Registrarse  
+![Registrarse](src/assets/demo/register.gif)  
+
+### 🔹 Recuperar contraseña  
+![Recuperar contraseña](src/assets/demo/pass-recovery.gif)  
+
+### 🔹 Iniciar sesión  
+![Iniciar sesión](src/assets/demo/login-in.gif)  
+
+### 🔹 Configuración  
+![Configuración](src/assets/demo/settings.gif)  
+
+### 🔹 Crear mueble  
+![Crear mueble](src/assets/demo/create-furniture.gif)  
+
+### 🔹 Visualizar mueble  
+![Visualizar mueble](src/assets/demo/view-furniture.gif)  
+
+### 🔹 Editar mueble  
+![Editar mueble](src/assets/demo/edit-furniture.gif)  
+
+### 🔹 Borrar mueble  
+![Borrar mueble](src/assets/demo/delete-furniture.gif)  
+
+### 🔹 Filtrar muebles  
+![Filtrar muebles](src/assets/demo/filter-example.gif)  
 
 ## 📌 Instalación y uso
 
